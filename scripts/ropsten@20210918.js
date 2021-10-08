@@ -7,6 +7,7 @@ const { ethers, upgrades } = require('hardhat');
 
 exports.deploy = async function() {
     
+    const eth = { address: '0x0000000000000000000000000000000000000000' };
     const TestERC20 = await ethers.getContractFactory('TestERC20');
     const NestPriceFacade = await ethers.getContractFactory('NestPriceFacade');
     const HedgeGovernance = await ethers.getContractFactory('HedgeGovernance');
@@ -16,71 +17,55 @@ exports.deploy = async function() {
     const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
     const HedgeVaultForStaking = await ethers.getContractFactory('HedgeVaultForStaking');
 
-    console.log('** 开始部署合约 rinkeby@20210819.js **');
+    console.log('** 开始部署合约 ropsten@20210918.js **');
     
-    // usdt: 0x2d750210c0b5343a0b79beff8F054C9add7d2411
-    // hbtc: 0xaE73d363Cb4aC97734E07e48B01D0a1FF5D1190B
-    // peth: 0x4D4B378eFbeb7eE15Aa498F3383C9949391557e0
-    // pusd: 0x740ed84037E5d2F650b585759623EBC4de849021
-    // usdc: 0xB64825a6bA80d65886b5123f5170ddffc935D9DE
-    // nest: 0xE313F3f49B647fBEDDC5F2389Edb5c93CBf4EE25
-    // nestPriceFacade: 0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838
-
-    // proxyAdmin: 0x0d60094a1DC03457682060C8f3Ee9eA8AaFC047a
-    // hedgeGovernance: 0xE1328C673620433e0c1847e5BfB698DbCED9688b
-    // dcu: 0x6747972f3Fc6f4A4fC9c8a1fF4C2899dc83c4DF7
-
-    //     ** 开始部署合约 rinkeby@20210819.js **
-    // usdt: 0x2d750210c0b5343a0b79beff8F054C9add7d2411
-    // nestPriceFacade: 0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838
-    // hedgeGovernance: 0xE1328C673620433e0c1847e5BfB698DbCED9688b
-    // dcu: 0x6747972f3Fc6f4A4fC9c8a1fF4C2899dc83c4DF7
-    // hedgeDAO: 0x55D6Fe1C851181F5C1779Bf04822675Ae144b38F
-    // hedgeOptions: 0x66bD0139b6216B740820a54a71a2CDFf2070e76B
-    // hedgeFutures: 0xc5086B5a9AC3A4036416690E382AbD7808DC307c
-
-    //     ** 开始部署合约 rinkeby@20210819.js **
-    // usdt: 0x2d750210c0b5343a0b79beff8F054C9add7d2411
-    // nestPriceFacade: 0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838
-    // hedgeGovernance: 0xE1328C673620433e0c1847e5BfB698DbCED9688b
-    // dcu: 0x6747972f3Fc6f4A4fC9c8a1fF4C2899dc83c4DF7
-    // hedgeDAO: 0x55D6Fe1C851181F5C1779Bf04822675Ae144b38F
-    // hedgeOptions: 0x66bD0139b6216B740820a54a71a2CDFf2070e76B
-    // hedgeFutures: 0xc5086B5a9AC3A4036416690E382AbD7808DC307c
-    // hedgeVaultForStaking: 0x4A0C01665c10a7635fB33BCC45198dfC2f31db0C
+    //     ** 开始部署合约 ropsten@20210918.js **
+    // usdt: 0xc6611844fD9FAE67ABFAdB5a67E33A4fbbB00893
+    // hbtc: 0x86caf861010Ec334416C7d8c992Ba22b361152E4
+    // nestPriceFacade: 0x85723E83A7E7d88b0F3Ceb4C5bE7C853e3Ed8a82
+    // hedgeGovernance: 0xf669c02139e54C5D3b020DB8ba24c1bC66ebad87
+    // dcu: 0xFe864063e10e5f7D99803765f28d2676A582A816
+    // hedgeDAO: 0x417B0A969BebB25496e52303D0B22192261D3e82
+    // hedgeOptions: 0x90b5212B1CE2cCF2aDC9Af4fF7EAcd61d0A216fF
+    // hedgeFutures: 0x341bA26a1c4E1c609d170574Da0abB23f7986e34
+    // hedgeVaultForStaking: 0x74E243b3C1cCF1c6b19788314d8a852C5A86e618
 
     // 1. 部署依赖合约
     //const usdt = await TestERC20.deploy('USDT', 'USDT', 6);
-    const usdt = await TestERC20.attach('0x2d750210c0b5343a0b79beff8F054C9add7d2411');
+    const usdt = await TestERC20.attach('0xc6611844fD9FAE67ABFAdB5a67E33A4fbbB00893');
     console.log('usdt: ' + usdt.address);
 
+    //const hbtc = await TestERC20.deploy('HBTC', 'HBTC', 18);
+    const hbtc = await TestERC20.attach('0x86caf861010Ec334416C7d8c992Ba22b361152E4');
+    console.log('hbtc: ' + hbtc.address);
+
     //const nestPriceFacade = await NestPriceFacade.deploy();
-    const nestPriceFacade = await NestPriceFacade.attach('0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838');
+    const nestPriceFacade = await NestPriceFacade.attach('0x85723E83A7E7d88b0F3Ceb4C5bE7C853e3Ed8a82');
     console.log('nestPriceFacade: ' + nestPriceFacade.address);
 
     //const hedgeGovernance = await upgrades.deployProxy(HedgeGovernance, ['0x0000000000000000000000000000000000000000'], { initializer: 'initialize' });
-    const hedgeGovernance = await HedgeGovernance.attach('0xE1328C673620433e0c1847e5BfB698DbCED9688b');
+    const hedgeGovernance = await HedgeGovernance.attach('0xf669c02139e54C5D3b020DB8ba24c1bC66ebad87');
     console.log('hedgeGovernance: ' + hedgeGovernance.address);
 
     //const dcu = await DCU.deploy();
-    const dcu = await DCU.attach('0x6747972f3Fc6f4A4fC9c8a1fF4C2899dc83c4DF7');
+    const dcu = await DCU.attach('0xFe864063e10e5f7D99803765f28d2676A582A816');
     console.log('dcu: ' + dcu.address);
 
     //const hedgeDAO = await upgrades.deployProxy(HedgeDAO, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeDAO = await HedgeDAO.attach('0x55D6Fe1C851181F5C1779Bf04822675Ae144b38F');
+    const hedgeDAO = await HedgeDAO.attach('0x417B0A969BebB25496e52303D0B22192261D3e82');
     console.log('hedgeDAO: ' + hedgeDAO.address);
 
     //const hedgeOptions = await upgrades.deployProxy(HedgeOptions, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeOptions = await HedgeOptions.attach('0x66bD0139b6216B740820a54a71a2CDFf2070e76B');
+    const hedgeOptions = await HedgeOptions.attach('0x90b5212B1CE2cCF2aDC9Af4fF7EAcd61d0A216fF');
     console.log('hedgeOptions: ' + hedgeOptions.address);
 
     //const hedgeFutures = await upgrades.deployProxy(HedgeFutures, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeFutures = await HedgeFutures.attach('0xc5086B5a9AC3A4036416690E382AbD7808DC307c');
+    const hedgeFutures = await HedgeFutures.attach('0x341bA26a1c4E1c609d170574Da0abB23f7986e34');
     console.log('hedgeFutures: ' + hedgeFutures.address);
 
     //const hedgeVaultForStaking = await upgrades.deployProxy(HedgeVaultForStaking, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeVaultForStaking = await HedgeVaultForStaking.attach('0x4A0C01665c10a7635fB33BCC45198dfC2f31db0C');
-    console.log('hedgeVaultForStaking: ' + hedgeVaultForStaking.address);
+    const hedgeVaultForStaking = await HedgeVaultForStaking.attach('0x74E243b3C1cCF1c6b19788314d8a852C5A86e618');
+    console.log('hedgeVaultForStaking: ' +hedgeVaultForStakingng.address);
 
     // // await hedgeGovernance.initialize('0x0000000000000000000000000000000000000000');
     // console.log('1. dcu.initialize(hedgeGovernance.address)');
@@ -112,7 +97,17 @@ exports.deploy = async function() {
     // await hedgeVaultForStaking.update(hedgeGovernance.address);
 
     // console.log('8. hedgeOptions.setConfig()');
-    // await hedgeOptions.setConfig('175482725206');
+    // await hedgeOptions.setConfig(eth.address, { 
+    //     sigmaSQ: '4168125400', 
+    //     miu: '175482725206', 
+    //     minPeriod: 10000 
+    // });
+    // console.log('8.1. hedgeOptions.setConfig()');
+    // await hedgeOptions.setConfig(hbtc.address, { 
+    //     sigmaSQ: '4168125400', 
+    //     miu: '175482725206', 
+    //     minPeriod: 10000 
+    // });
 
     // console.log('9. dcu.setMinter(hedgeOptions.address, 1)');
     // await dcu.setMinter(hedgeOptions.address, 1);
@@ -121,18 +116,38 @@ exports.deploy = async function() {
     // console.log('11. dcu.setMinter(hedgeVaultForStaking.address, 1)');
     // await dcu.setMinter(hedgeVaultForStaking.address, 1);
 
+    // await hedgeOptions.setUsdtTokenAddress(usdt.address);
+    // await hedgeFutures.setUsdtTokenAddress(usdt.address);
+
+    // console.log('8.2 create lever');
+    // await hedgeFutures.create(eth.address, 1, true);
+    // await hedgeFutures.create(eth.address, 2, true);
+    // await hedgeFutures.create(eth.address, 5, true);
+    // await hedgeFutures.create(eth.address, 1, false);
+    // await hedgeFutures.create(eth.address, 2, false);
+    // await hedgeFutures.create(eth.address, 5, false);
+    // await hedgeFutures.create(hbtc.address, 1, true);
+    // await hedgeFutures.create(hbtc.address, 2, true);
+    // await hedgeFutures.create(hbtc.address, 5, true);
+    // await hedgeFutures.create(hbtc.address, 1, false);
+    // await hedgeFutures.create(hbtc.address, 2, false);
+    // await hedgeFutures.create(hbtc.address, 5, false);
+
     console.log('---------- OK ----------');
     
     const contracts = {
+        eth: eth,
         usdt: usdt,
+        hbtc: hbtc,
 
+        hedgeGovernance: hedgeGovernance,
         dcu: dcu,
         hedgeDAO: hedgeDAO,
         hedgeOptions: hedgeOptions,
         hedgeFutures: hedgeFutures,
-        hedgeVaultForStaking: hedgeVaultForStaking,
+        hedgeVaultForStaking:hedgeVaultForStakingng,
         nestPriceFacade: nestPriceFacade
     };
 
     return contracts;
-}
+};

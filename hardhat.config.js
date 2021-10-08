@@ -25,7 +25,7 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 888888
+        runs: 200
       }
     }
   },
@@ -33,21 +33,22 @@ module.exports = {
     mainnet: {
       url: `https://eth-mainnet.alchemyapi.io/v2/${config.alchemy.mainnet.apiKey}`,
       accounts: [config.account.mainnet.key, config.account.mainnet.userA, config.account.mainnet.userB],
-      gasPrice: 25e9,
       gas: 6e6,
+      gasPrice: 1e9,
       timeout: 2000000000
     },
     ropsten: {
       url: `https://eth-ropsten.alchemyapi.io/v2/${config.alchemy.ropsten.apiKey}`,
       accounts: [config.account.ropsten.key, config.account.ropsten.userA, config.account.ropsten.userB],
-      gasPrice: 1e9,
+      gas: 6e6,
+      initialBaseFeePerGas: 1e9,
       timeout: 2000000000
     },
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${config.alchemy.rinkeby.apiKey}`,
       accounts: [config.account.rinkeby.key, config.account.rinkeby.userA, config.account.rinkeby.userB],
-      gasPrice: 1e9,
       gas: 6e6,
+      initialBaseFeePerGas: 1e9,
       timeout: 2000000000
     },
     kovan: {
