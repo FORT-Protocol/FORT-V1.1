@@ -5,10 +5,10 @@ pragma solidity ^0.8.6;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./libs/TransferHelper.sol";
-import "./libs/StringHelper.sol";
 import "./libs/ABDKMath64x64.sol";
 
 import "./interfaces/IHedgeOptions.sol";
+import "./interfaces/INestPriceFacade.sol";
 
 import "./HedgeFrequentlyUsed.sol";
 import "./DCU.sol";
@@ -27,9 +27,8 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
         mapping(address=>uint) balances;
     }
 
-    // TODO: 测试时，时间加速48倍
     // 区块时间
-    uint constant BLOCK_TIME = 14 * 48;
+    uint constant BLOCK_TIME = 14;
 
     // 64位二进制精度的1
     int128 constant ONE = 0x10000000000000000;
@@ -37,11 +36,23 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
     // 64位二进制精度的50000
     uint constant V50000 = 0x0C3500000000000000000;
 
+    // 期权卖出价值比例，万分制。9750
+    uint constant SELL_RATE = 9750;
+
+    // σ-usdt	0.00021368		波动率，每个币种独立设置（年化120%）
+    uint constant SIGMA_SQ = 45659142400;
+
+    // μ-usdt	0.000000025367		漂移系数，每个币种独立设置（年化80%）
+    uint constant MIU = 467938556917;
+
+    // 期权行权最小间隔	6000	区块数	行权时间和当前时间最小间隔区块数，统一设置
+    uint constant MIN_PERIOD = 6000;
+
     // 期权代币映射
     mapping(uint=>uint) _optionMapping;
 
-    // 配置参数
-    mapping(address=>Config) _configs;
+    // // 配置参数
+    // mapping(address=>Config) _configs;
 
     // 缓存代币的基数值
     mapping(address=>uint) _bases;
@@ -59,19 +70,19 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
         _options.push();
     }
 
-    /// @dev 修改指定代币通道的配置
-    /// @param tokenAddress 目标代币地址
-    /// @param config 配置对象
-    function setConfig(address tokenAddress, Config calldata config) external override {
-        _configs[tokenAddress] = config;
-    }
+    // /// @dev 修改指定代币通道的配置
+    // /// @param tokenAddress 目标代币地址
+    // /// @param config 配置对象
+    // function setConfig(address tokenAddress, Config calldata config) external override {
+    //     _configs[tokenAddress] = config;
+    // }
 
-    /// @dev 获取指定代币通道的配置
-    /// @param tokenAddress 目标代币地址
-    /// @return 配置对象
-    function getConfig(address tokenAddress) external view override returns (Config memory) {
-        return _configs[tokenAddress];
-    }
+    // /// @dev 获取指定代币通道的配置
+    // /// @param tokenAddress 目标代币地址
+    // /// @return 配置对象
+    // function getConfig(address tokenAddress) external view override returns (Config memory) {
+    //     return _configs[tokenAddress];
+    // }
 
     /// @dev 返回指定期权的余额
     /// @param index 目标期权索引号
@@ -193,23 +204,7 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
     ) external payable override {
 
         // 1. 调用预言机获取价格
-        // 1.1. 获取token相对于eth的价格
-        uint tokenAmount = 1 ether;
-        uint fee = msg.value;
-        if (tokenAddress != address(0)) {
-            fee = msg.value >> 1;
-            (, tokenAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).triggeredPrice {
-                value: fee
-            } (tokenAddress, msg.sender);
-        }
-
-        // 1.2. 获取usdt相对于eth的价格
-        (, uint usdtAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).triggeredPrice {
-            value: fee
-        } (USDT_TOKEN_ADDRESS, msg.sender);
-
-        // 1.3. 将token价格转化为以usdt为单位计算的价格
-        uint oraclePrice = usdtAmount * _getBase(tokenAddress) / tokenAmount;
+        uint oraclePrice = _queryPrice(tokenAddress, msg.value, msg.sender);
 
         // 2. 计算可以买到的期权份数
         uint amount = estimate(tokenAddress, oraclePrice, strikePrice, orientation, exerciseBlock, dcuAmount);
@@ -261,10 +256,9 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
         uint dcuAmount
     ) public view override returns (uint amount) {
 
-        Config memory config = _configs[tokenAddress];
-        uint minPeriod = uint(config.minPeriod);
-        require(minPeriod > 0, "FEO:not allowed");
-        require(exerciseBlock > block.number + minPeriod, "FEO:exerciseBlock to small");
+        //Config memory config = _configs[tokenAddress];
+        //uint minPeriod = uint(config.minPeriod);
+        require(exerciseBlock > block.number + MIN_PERIOD, "FEO:exerciseBlock to small");
 
         // 1. 获取或创建期权代币
 
@@ -272,21 +266,27 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
 
         // 3. 计算权利金（需要的dcu数量）
         // 按照平均每14秒出一个块计算
-        uint T = (exerciseBlock - block.number) * BLOCK_TIME;
-        uint v;
+        uint v = calcV(
+            tokenAddress, 
+            oraclePrice,
+            strikePrice,
+            orientation,
+            exerciseBlock
+        );
+
         if (orientation) {
-            v = _calcVc(config, oraclePrice, T, strikePrice);
+            //v = _calcVc(config, oraclePrice, T, strikePrice);
             // Vc>=S0*1%; Vp>=K*1%
             // require(v * 100 >> 64 >= oraclePrice, "FEO:vc must greater than S0*1%");
             if (v * 100 >> 64 < oraclePrice) {
-                v = (oraclePrice << 64) / 100;
+                v = oraclePrice * 0x10000000000000000 / 100;
             }
         } else {
-            v = _calcVp(config, oraclePrice, T, strikePrice);
+            //v = _calcVp(config, oraclePrice, T, strikePrice);
             // Vc>=S0*1%; Vp>=K*1%
             // require(v * 100 >> 64 >= strikePrice, "FEO:vp must greater than K*1%");
             if (v * 100 >> 64 < strikePrice) {
-                v = (strikePrice << 64) / 100;
+                v = strikePrice * 0x10000000000000000 / 100;
             }
         }
 
@@ -305,8 +305,7 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
         bool orientation = option.orientation;
         uint exerciseBlock = uint(option.exerciseBlock);
 
-        // TODO: 测试期间不检查
-        //require(block.number >= endblock, "FEO:at maturity");
+        require(block.number >= exerciseBlock, "FEO:at maturity");
 
         // 2. 销毁期权代币
         option.balances[msg.sender] -= amount;
@@ -354,6 +353,76 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
 
         // 行权事件
         emit Exercise(index, amount, msg.sender, gain);
+    }
+
+    /// @dev 卖出期权
+    /// @param index 期权编号
+    /// @param amount 卖出的期权分数
+    function sell(uint index, uint amount) external payable override {
+        // 期权卖出公式：vt=Max（ct(T,K）*0.975，0）其中ct(K,T)是按照定价公式计算的期权成本，
+        // 注意，不是包含了不低于1%这个设定
+        // 1. 获取期权信息
+        Option storage option = _options[index];
+        address tokenAddress = option.tokenAddress;
+        uint strikePrice = _decodeFloat(option.strikePrice);
+        bool orientation = option.orientation;
+        uint exerciseBlock = uint(option.exerciseBlock);
+
+        // 2. 销毁期权代币
+        option.balances[msg.sender] -= amount;
+
+        // 3. 调用预言机获取价格，读取预言机在指定区块的价格
+        uint oraclePrice = _queryPrice(tokenAddress, msg.value, msg.sender);
+
+        // 4. 分情况计算当前情况下的期权价格
+        // 按照平均每14秒出一个块计算
+        uint dcuAmount = amount * calcV(
+            tokenAddress, 
+            oraclePrice,
+            strikePrice,
+            orientation,
+            exerciseBlock
+        ) * SELL_RATE / (USDT_BASE * 10000 << 64);
+        if (dcuAmount > 0) {
+            DCU(DCU_TOKEN_ADDRESS).mint(msg.sender, dcuAmount);
+        }
+
+        // 卖出事件
+        emit Sell(index, amount, msg.sender, dcuAmount);
+    }
+
+    /// @dev 计算期权价格
+    /// @param tokenAddress 目标代币地址，0表示eth
+    /// @param oraclePrice 当前预言机价格价
+    /// @param strikePrice 用户设置的行权价格，结算时系统会根据标的物当前价与行权价比较，计算用户盈亏
+    /// @param orientation 看涨/看跌两个方向。true：看涨，false：看跌
+    /// @param exerciseBlock 到达该日期后用户手动进行行权，日期在系统中使用区块号进行记录
+    /// @return v 期权价格，需要除以18446744073709551616000000
+    function calcV(
+        address tokenAddress,
+        uint oraclePrice,
+        uint strikePrice,
+        bool orientation,
+        uint exerciseBlock
+    ) public view override returns (uint v) {
+
+        require(tokenAddress == address(0), "FEO:not allowed");
+
+        //Config memory config = _configs[tokenAddress];
+        //uint minPeriod = uint(config.minPeriod);
+        //require(minPeriod > 0, "FEO:not allowed");
+        //require(exerciseBlock > block.number + minPeriod, "FEO:exerciseBlock to small");
+
+        // 1. 获取或创建期权代币
+
+        // 2. 调用预言机获取价格
+
+        // 3. 计算权利金（需要的dcu数量）
+        // 按照平均每14秒出一个块计算
+        uint T = (exerciseBlock - block.number) * BLOCK_TIME;
+        v = orientation 
+            ? _calcVc(oraclePrice, T, strikePrice) 
+            : _calcVp(oraclePrice, T, strikePrice);
     }
 
     // 转化位OptionView
@@ -480,11 +549,32 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
         return int128(int(v / 100000));
     }
 
-    // 计算看涨期权价格
-    function _calcVc(Config memory config, uint S0, uint T, uint K) private pure returns (uint) {
+    // 查询token价格
+    function _queryPrice(address tokenAddress, uint fee, address payback) private returns (uint oraclePrice) {
+        // 1.1. 获取token相对于eth的价格
+        uint tokenAmount = 1 ether;
+        //uint fee = msg.value;
+        if (tokenAddress != address(0)) {
+            fee >>= 1;
+            (, tokenAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).triggeredPrice {
+                value: fee
+            } (tokenAddress, payback);
+        }
 
-        int128 sigmaSQ_T = _d18TOb64(uint(config.sigmaSQ) * T);
-        int128 miu_T = _toInt128(uint(int(config.miu)) * T);
+        // 1.2. 获取usdt相对于eth的价格
+        (, uint usdtAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).triggeredPrice {
+            value: fee
+        } (USDT_TOKEN_ADDRESS, payback);
+
+        // 1.3. 将token价格转化为以usdt为单位计算的价格
+        oraclePrice = usdtAmount * _getBase(tokenAddress) / tokenAmount;
+    }
+
+    // 计算看涨期权价格
+    function _calcVc(uint S0, uint T, uint K) private pure returns (uint vc) {
+
+        int128 sigmaSQ_T = _d18TOb64(SIGMA_SQ * T);
+        int128 miu_T = _toInt128(MIU * T);
         int128 sigma_t = ABDKMath64x64.sqrt(sigmaSQ_T);
         int128 D1 = _D1(S0, K, sigmaSQ_T, miu_T);
         int128 d = ABDKMath64x64.div(D1, sigma_t);
@@ -498,14 +588,14 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
         )) * S0;
         uint right = _toUInt(ABDKMath64x64.sub(ONE, _snd(d))) * K;
         
-        return left - right;
+        vc = left > right ? left - right : 0;
     }
 
     // 计算看跌期权价格
-    function _calcVp(Config memory config, uint S0, uint T, uint K) private pure returns (uint) {
+    function _calcVp(uint S0, uint T, uint K) private pure returns (uint vp) {
 
-        int128 sigmaSQ_T = _d18TOb64(uint(config.sigmaSQ) * T);
-        int128 miu_T = _toInt128(uint(int(config.miu)) * T);
+        int128 sigmaSQ_T = _d18TOb64(SIGMA_SQ * T);
+        int128 miu_T = _toInt128(MIU * T);
         int128 sigma_t = ABDKMath64x64.sqrt(sigmaSQ_T);
         int128 D1 = _D1(S0, K, sigmaSQ_T, miu_T);
         int128 d = ABDKMath64x64.div(D1, sigma_t);
@@ -516,17 +606,17 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
             _snd(ABDKMath64x64.sub(d, sigma_t))
         )) * S0;
 
-        return left - right;
+        vp = left > right ? left - right : 0;
     }
 
     // 计算公式种的d1，因为没有除以σ，所以命名为D1
     function _D1(uint S0, uint K, int128 sigmaSQ_T, int128 miu_T) private pure returns (int128) {
 
-        require(K < 0x1000000000000000000000000000000000000000000000000, "FEO:K can't ROL 64bits");
+        //require(K < 0x1000000000000000000000000000000000000000000000000, "FEO:K can't ROL 64bits");
         return
             ABDKMath64x64.sub(
                 ABDKMath64x64.add(
-                    ABDKMath64x64.ln(_toInt128((K << 64) / S0)),
+                    ABDKMath64x64.ln(_toInt128(K * 0x10000000000000000 / S0)),
                     sigmaSQ_T >> 1
                 ),
                 miu_T

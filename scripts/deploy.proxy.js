@@ -19,6 +19,26 @@ exports.deploy = async function() {
 
     console.log('** 开始部署合约 deploy.proxy.js **');
     
+    // const nest = await TestERC20.deploy('NEST', 'NEST', 18);
+    // //const nest = await TestERC20.attach('0x0000000000000000000000000000000000000000');
+    // console.log('nest: ' + nest.address);
+
+    // const nhbtc = await TestERC20.deploy('NHBTC', 'NEST', 18);
+    // //const nhbtc = await TestERC20.attach('0x0000000000000000000000000000000000000000');
+    // console.log('nhbtc: ' + nhbtc.address);
+
+    // const cofi = await TestERC20.deploy('COFI', 'COFI', 18);
+    // //const cofi = await TestERC20.attach('0x0000000000000000000000000000000000000000');
+    // console.log('cofi: ' + cofi.address);
+
+    // const pusd = await TestERC20.deploy('PUSD', 'PUSD', 18);
+    // //const pusd = await TestERC20.attach('0x0000000000000000000000000000000000000000');
+    // console.log('pusd: ' + pusd.address);
+
+    // const fortube = await TestERC20.deploy('FORTUBE', 'FORTUBE', 18);
+    // //const fortube = await TestERC20.attach('0x0000000000000000000000000000000000000000');
+    // console.log('fortube: ' + fortube.address);
+
     // 1. 部署依赖合约
     const usdt = await TestERC20.deploy('USDT', 'USDT', 6);
     //const usdt = await TestERC20.attach('0x0000000000000000000000000000000000000000');
@@ -85,18 +105,20 @@ exports.deploy = async function() {
     console.log('7. hedgeVaultForStaking.update()');
     await hedgeVaultForStaking.update(hedgeGovernance.address);
 
-    console.log('8. hedgeOptions.setConfig()');
-    await hedgeOptions.setConfig(eth.address, { 
-        sigmaSQ: '45659142400', 
-        miu: '467938556917', 
-        minPeriod: 6000 
-    });
-    console.log('8.1. hedgeOptions.setConfig()');
-    await hedgeOptions.setConfig(hbtc.address, { 
-        sigmaSQ: '45659142400', 
-        miu: '467938556917', 
-        minPeriod: 6000 
-    });
+    // console.log('8. hedgeOptions.setConfig()');
+    // await hedgeOptions.setConfig(eth.address, { 
+    //     sigmaSQ: '45659142400', 
+    //     miu: '467938556917', 
+    //     minPeriod: 6000 
+    // });
+    // console.log('8.1. hedgeOptions.setConfig()');
+    // await hedgeOptions.setConfig(hbtc.address, { 
+    //     sigmaSQ: '45659142400', 
+    //     miu: '467938556917', 
+    //     minPeriod: 6000 
+    // });
+    await usdt.transfer(usdt.address, 0);
+    await usdt.transfer(usdt.address, 0);
 
     console.log('9. dcu.setMinter(hedgeOptions.address, 1)');
     await dcu.setMinter(hedgeOptions.address, 1);
@@ -119,7 +141,6 @@ exports.deploy = async function() {
     await hedgeFutures.create(eth.address, 3, false);
     await hedgeFutures.create(eth.address, 4, false);
     await hedgeFutures.create(eth.address, 5, false);
-
 
     console.log('---------- OK ----------');
     

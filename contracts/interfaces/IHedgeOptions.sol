@@ -5,19 +5,19 @@ pragma solidity ^0.8.6;
 /// @dev 定义欧式期权接口
 interface IHedgeOptions {
     
-    // 代币通道配置结构体
-    struct Config {
-        // 波动率
-        uint96 sigmaSQ;
+    // // 代币通道配置结构体
+    // struct Config {
+    //     // 波动率
+    //     uint96 sigmaSQ;
 
-        // 64位二进制精度
-        // 0.3/365/86400 = 9.512937595129377E-09
-        // 175482725206
-        int128 miu;
+    //     // 64位二进制精度
+    //     // 0.3/365/86400 = 9.512937595129377E-09
+    //     // 175482725206
+    //     int128 miu;
 
-        // 期权行权时间和当前时间的最小间隔
-        uint32 minPeriod;
-    }
+    //     // 期权行权时间和当前时间的最小间隔
+    //     uint32 minPeriod;
+    // }
 
     /// @dev 期权信息
     struct OptionView {
@@ -55,16 +55,23 @@ interface IHedgeOptions {
     /// @param owner 所有者
     /// @param gain 赢得的dcu数量
     event Exercise(uint index, uint amount, address owner, uint gain);
+    
+    /// @dev 卖出事件
+    /// @param index 期权编号
+    /// @param amount 卖出份数
+    /// @param owner 所有者
+    /// @param dcuAmount 得到的dcu数量
+    event Sell(uint index, uint amount, address owner, uint dcuAmount);
+    
+    // /// @dev 修改指定代币通道的配置
+    // /// @param tokenAddress 目标代币地址
+    // /// @param config 配置对象
+    // function setConfig(address tokenAddress, Config calldata config) external;
 
-    /// @dev 修改指定代币通道的配置
-    /// @param tokenAddress 目标代币地址
-    /// @param config 配置对象
-    function setConfig(address tokenAddress, Config calldata config) external;
-
-    /// @dev 获取指定代币通道的配置
-    /// @param tokenAddress 目标代币地址
-    /// @return 配置对象
-    function getConfig(address tokenAddress) external view returns (Config memory);
+    // /// @dev 获取指定代币通道的配置
+    // /// @param tokenAddress 目标代币地址
+    // /// @return 配置对象
+    // function getConfig(address tokenAddress) external view returns (Config memory);
     
     /// @dev 返回指定期权的余额
     /// @param index 目标期权索引号
@@ -143,4 +150,24 @@ interface IHedgeOptions {
     /// @param index 期权编号
     /// @param amount 结算的期权分数
     function exercise(uint index, uint amount) external payable;
+
+    /// @dev 卖出期权
+    /// @param index 期权编号
+    /// @param amount 卖出的期权分数
+    function sell(uint index, uint amount) external payable;
+
+    /// @dev 计算期权价格
+    /// @param tokenAddress 目标代币地址，0表示eth
+    /// @param oraclePrice 当前预言机价格价
+    /// @param strikePrice 用户设置的行权价格，结算时系统会根据标的物当前价与行权价比较，计算用户盈亏
+    /// @param orientation 看涨/看跌两个方向。true：看涨，false：看跌
+    /// @param exerciseBlock 到达该日期后用户手动进行行权，日期在系统中使用区块号进行记录
+    /// @return v 期权价格，需要除以18446744073709551616000000
+    function calcV(
+        address tokenAddress,
+        uint oraclePrice,
+        uint strikePrice,
+        bool orientation,
+        uint exerciseBlock
+    ) external view returns (uint v);
 }

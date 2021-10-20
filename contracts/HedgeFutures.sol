@@ -5,10 +5,10 @@ pragma solidity ^0.8.6;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./libs/TransferHelper.sol";
-import "./libs/StringHelper.sol";
 import "./libs/ABDKMath64x64.sol";
 
 import "./interfaces/IHedgeFutures.sol";
+import "./interfaces/INestPriceFacade.sol";
 
 import "./HedgeFrequentlyUsed.sol";
 import "./DCU.sol";
@@ -48,9 +48,8 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     // 买入永续合约和其他交易之间最小的间隔区块数
     uint constant MIN_PERIOD = 100;
 
-    // TODO: 测试时，时间加速48倍
     // 区块时间
-    uint constant BLOCK_TIME = 14 * 48;
+    uint constant BLOCK_TIME = 14;
 
     // 永续合约映射
     mapping(uint=>uint) _futureMapping;
@@ -118,7 +117,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         for (uint index = 0; index < count && i > end;) {
             FutureInfo storage fi = futures[--i];
             if (uint(fi.accounts[owner].balance) > 0) {
-                futureArray[index++] = _toFutureView(fi, i);
+                futureArray[index++] = _toFutureView(fi, i, owner);
             }
         }
     }
@@ -147,7 +146,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
             uint end = index > count ? index - count : 0;
             while (index > end) {
                 FutureInfo storage fi = futures[--index];
-                futureArray[i++] = _toFutureView(fi, index);
+                futureArray[i++] = _toFutureView(fi, index, msg.sender);
             }
         } 
         // 正序
@@ -158,7 +157,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
                 end = length;
             }
             while (index < end) {
-                futureArray[i++] = _toFutureView(futures[index], index);
+                futureArray[i++] = _toFutureView(futures[index], index, msg.sender);
                 ++index;
             }
         }
@@ -208,7 +207,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         bool orientation
     ) external view override returns (FutureView memory) {
         uint index = _futureMapping[_getKey(tokenAddress, lever, orientation)];
-        return _toFutureView(_futures[index], index);
+        return _toFutureView(_futures[index], index, msg.sender);
     }
 
     /// @dev 买入永续合约
@@ -307,7 +306,9 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
                 );
 
                 // 杠杆倍数大于1，并且余额小于最小额度时，可以清算
-                if (balance < MIN_VALUE) {
+                // 改成当账户净值低于Max(保证金 * 2%*g, 10) 时，清算
+                uint minValue = uint(account.balance) * lever / 50;
+                if (balance < (minValue < MIN_VALUE ? MIN_VALUE : minValue)) {
                     
                     accounts[acc] = Account(uint128(0), uint64(0), uint32(0));
 
@@ -463,8 +464,6 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     /// @param bn The block number when (ETH, TOKEN) price takes into effective
     /// @return k The K value
     function _calcK(uint sigmaSQ, uint bn) private view returns (uint k) {
-        // TODO: 测试时用固定的波动率: 0.00021368
-        sigmaSQ = 45659142400;
         k = 0.002 ether + (_sqrt((block.number - bn) * BLOCK_TIME * sigmaSQ * 1 ether) >> 1);
     }
 
@@ -574,8 +573,8 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     }
 
     // 转换永续合约信息
-    function _toFutureView(FutureInfo storage fi, uint index) private view returns (FutureView memory) {
-        Account memory account = fi.accounts[msg.sender];
+    function _toFutureView(FutureInfo storage fi, uint index, address owner) private view returns (FutureView memory) {
+        Account memory account = fi.accounts[owner];
         return FutureView(
             index,
             fi.tokenAddress,
