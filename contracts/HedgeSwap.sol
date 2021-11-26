@@ -17,30 +17,15 @@ contract HedgeSwap is HedgeFrequentlyUsed, IHedgeSwap {
     // NEST代币地址
     address constant NEST_TOKEN_ADDRESS = 0x04abEdA201850aC0124161F037Efd70c74ddC74C;
 
-    // K值，初始化存入3000万nest，同时增发3000万dcu到资金池
-    uint constant K = 30000000 ether * 30000000 ether;
+    // K值，初始化存入1500万nest，同时增发1500万dcu到资金池
+    uint constant K = 15000000 ether * 15000000 ether;
 
     constructor() {
-    }
-
-    /// @dev 通过存入nest来初始化资金池，每存入x个nest，资金池增加x个dcu和x个nest，同时用户得到x个dcu
-    /// @param amount 存入数量
-    function deposit(uint amount) external override {
-        TransferHelper.safeTransferFrom(NEST_TOKEN_ADDRESS, msg.sender, address(this), amount);
-        DCU(DCU_TOKEN_ADDRESS).mint(address(this), amount);
-        DCU(DCU_TOKEN_ADDRESS).mint(msg.sender, amount);
-
-        require(
-            IERC20(NEST_TOKEN_ADDRESS).balanceOf(address(this)) * 
-            IERC20(DCU_TOKEN_ADDRESS).balanceOf(address(this)) <= K,
-            "HS:too much"
-        );
     }
 
     /// @dev Swap token
     /// @param src Src token address
     /// @param dest Dest token address
-    /// @param amountIn The exact amount of Token a trader want to swap into pool
     /// @param to The target address receiving the ETH
     /// @param payback As the charging fee may change, it is suggested that the caller pay more fees, 
     /// and the excess fees will be returned through this address
@@ -49,7 +34,7 @@ contract HedgeSwap is HedgeFrequentlyUsed, IHedgeSwap {
     function swap(
         address src, 
         address dest, 
-        uint amountIn, 
+        uint /*amountIn*/, 
         address to, 
         address payback
     ) external payable returns (
@@ -57,7 +42,8 @@ contract HedgeSwap is HedgeFrequentlyUsed, IHedgeSwap {
         uint mined
     ) {
         if (msg.value > 0) {
-            payable(payback).transfer(msg.value);
+            // payable(payback).transfer(msg.value);
+            TransferHelper.safeTransferETH(payback, msg.value);
         }
 
         // K值是固定常量，伪造amountIn没有意义
@@ -68,6 +54,8 @@ contract HedgeSwap is HedgeFrequentlyUsed, IHedgeSwap {
         } else {
             revert("HS:pair not allowed");
         }
+
+        mined = 0;
     }
 
     /// @dev 使用确定数量的nest兑换dcu
