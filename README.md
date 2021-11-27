@@ -3,7 +3,7 @@
 ## Contract Addresses
 
 ### 2021-10-20@mainnet
-| Name | Interfaces | rinkeby |
+| Name | Interfaces | mainnet |
 | ---- | ---- | ---- |
 | nest | IERC20 | 0x04abEdA201850aC0124161F037Efd70c74ddC74C |
 | nhbtc | IERC20 | 0x1F832091fAf289Ed4f50FE7418cFbD2611225d46 |
