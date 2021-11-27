@@ -21,7 +21,7 @@ task("accounts", "Prints the list of accounts", async () => {
  */
 module.exports = {
   solidity: {
-    version: '0.8.9',
+    version: '0.8.10',
     settings: {
       optimizer: {
         enabled: true,
@@ -33,7 +33,7 @@ module.exports = {
     mainnet: {
       url: `${config.infura.mainnet.url}`,
       accounts: [config.account.mainnet.key, config.account.mainnet.userA, config.account.mainnet.userB],
-      initialBaseFeePerGas: 50e9,
+      initialBaseFeePerGas: 90e9,
       timeout: 2000000000
     },
     ropsten: {

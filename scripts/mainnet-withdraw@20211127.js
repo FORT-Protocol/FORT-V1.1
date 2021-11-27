@@ -16,6 +16,7 @@ exports.deploy = async function() {
     const HedgeOptions = await ethers.getContractFactory('HedgeOptions');
     const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
     const HedgeVaultForStaking = await ethers.getContractFactory('HedgeVaultForStaking');
+    const HedgeSwapWithdraw = await ethers.getContractFactory('HedgeSwapWithdraw');
     const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
 
     console.log('** 开始部署合约 mainnet-withdraw@20211127.js **');
@@ -110,10 +111,10 @@ exports.deploy = async function() {
     const hedgeSwap = await HedgeSwap.attach('0x6e7fd4BA02A5a7a75Ea3CcE37e221dC144D606Dd');
     console.log('hedgeSwap: ' + hedgeSwap.address);
 
-    // 1. 先部署取出合约
-    // 由于取出合约只运行一次，因此可以将runs优化改为1再部署，以节省gas消耗
-    const hedgeSwapWithdraw = await HedgeSwapWithdraw.deploy();
-    console.log('hedgeSwapWithdraw: ' + hedgeSwapWithdraw.address);
+    // // 1. 先部署取出合约
+    // // 由于取出合约只运行一次，因此可以将runs优化改为1再部署，以节省gas消耗
+    // const hedgeSwapWithdraw = await HedgeSwapWithdraw.deploy();
+    // console.log('hedgeSwapWithdraw: ' + hedgeSwapWithdraw.address);
     
     // 2. 再部署新的swap合约
     // 部署swap合约时，需要将runs改为888888
