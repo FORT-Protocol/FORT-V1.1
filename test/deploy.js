@@ -22,8 +22,8 @@ describe('HedgeOptions', function() {
             nestPriceFacade, hedgeSwap
         } = await deploy();
 
-        // const newHedgeFutures = await HedgeFutures.deploy();
-        // console.log('newHedgeFutures: ' + newHedgeFutures.address);
+        const newHedgeFutures = await HedgeFutures.deploy();
+        console.log('newHedgeFutures: ' + newHedgeFutures.address);
         // await dcu.setMinter(hedgeSwap.address, 1);
         
         console.log('部署完成');
