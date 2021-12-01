@@ -251,7 +251,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         // 看涨的时候，初始价格乘以(1+k)，卖出价格除以(1+k)
         // 看跌的时候，初始价格除以(1+k)，卖出价格乘以(1+k)
         // 合并的时候，s0用记录的价格，s1用k修正的
-        uint oraclePrice = _queryPrice(fi.tokenAddress, !orientation, msg.sender);
+        uint oraclePrice = _queryPrice(0, fi.tokenAddress, !orientation, msg.sender);
 
         // 更新目标账号信息
         Account memory account = fi.accounts[msg.sender];
@@ -290,7 +290,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
             // 看涨的时候，初始价格乘以(1+k)，卖出价格除以(1+k)
             // 看跌的时候，初始价格除以(1+k)，卖出价格乘以(1+k)
             // 合并的时候，s0用记录的价格，s1用k修正的
-            uint oraclePrice = _queryPrice(fi.tokenAddress, !orientation, msg.sender);
+            uint oraclePrice = _queryPrice(0, fi.tokenAddress, !orientation, msg.sender);
 
             uint reward = 0;
             mapping(address=>Account) storage accounts = fi.accounts;
@@ -357,7 +357,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         // 看涨的时候，初始价格乘以(1+k)，卖出价格除以(1+k)
         // 看跌的时候，初始价格除以(1+k)，卖出价格乘以(1+k)
         // 合并的时候，s0用记录的价格，s1用k修正的
-        uint oraclePrice = _queryPrice(tokenAddress, orientation, msg.sender);
+        uint oraclePrice = _queryPrice(dcuAmount, tokenAddress, orientation, msg.sender);
 
         Account memory account = fi.accounts[msg.sender];
         uint basePrice = _decodeFloat(account.basePrice);
@@ -381,7 +381,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     }
 
     // 查询预言机价格
-    function _queryPrice(address tokenAddress, bool enlarge, address payback) private returns (uint oraclePrice) {
+    function _queryPrice(uint dcuAmount, address tokenAddress, bool enlarge, address payback) private returns (uint oraclePrice) {
         require(tokenAddress == address(0), "HF:only support eth/usdt");
 
         // 获取usdt相对于eth的价格
@@ -397,10 +397,18 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         // 看跌的时候，初始价格除以(1+k)，卖出价格乘以(1+k)
         // 合并的时候，s0用记录的价格，s1用k修正的
         if (enlarge) {
-            oraclePrice = oraclePrice * (1 ether + k) / 1 ether;
+            oraclePrice = oraclePrice * (1 ether + k + impactCost(dcuAmount)) / 1 ether;
         } else {
-            oraclePrice = oraclePrice * 1 ether / (1 ether + k);
+            oraclePrice = oraclePrice * 1 ether / (1 ether + k + impactCost(dcuAmount));
         }
+    }
+
+    /// @dev Calculate the impact cost
+    /// @param vol Trade amount in dcu
+    /// @return Impact cost
+    function impactCost(uint vol) public pure override returns (uint) {
+        //impactCost = vol / 10000 / 1000;
+        return vol / 10000000;
     }
 
     /// @dev K value is calculated by revised volatility
@@ -415,13 +423,27 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         } else {
             sigmaISQ = 1 ether - sigmaISQ;
         }
+
+        // James:
+        // fort算法 把前面一项改成 max ((p2-p1)/p1,0.002) 后面不变
+        // jackson:
+        // 好
+        // jackson:
+        // 要取绝对值吧
+        // James:
+        // 对的
+        if (sigmaISQ > 0.002 ether) {
+            k = sigmaISQ;
+        } else {
+            k = 0.002 ether;
+        }
+
         sigmaISQ = sigmaISQ * sigmaISQ / (bn - bn0) / BLOCK_TIME / 1 ether;
 
         if (sigmaISQ > SIGMA_SQ) {
-            k = _sqrt(0.002 ether * 0.002 ether * sigmaISQ / SIGMA_SQ) + 
-                _sqrt(1 ether * BLOCK_TIME * (block.number - bn) * sigmaISQ);
+            k += _sqrt(1 ether * BLOCK_TIME * (block.number - bn) * sigmaISQ);
         } else {
-            k = 0.002 ether + _sqrt(1 ether * BLOCK_TIME * SIGMA_SQ * (block.number - bn));
+            k += _sqrt(1 ether * BLOCK_TIME * SIGMA_SQ * (block.number - bn));
         }
     }
 
