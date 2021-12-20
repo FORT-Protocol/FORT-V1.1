@@ -8,7 +8,7 @@ import "./libs/TransferHelper.sol";
 import "./libs/ABDKMath64x64.sol";
 
 import "./interfaces/IHedgeFutures.sol";
-import "./interfaces/INestPriceFacade.sol";
+import "./interfaces/INestBatchPrice2.sol";
 
 import "./HedgeFrequentlyUsed.sol";
 import "./DCU.sol";
@@ -50,6 +50,12 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
 
     // // 买入永续合约和其他交易之间最小的间隔区块数
     // uint constant MIN_PERIOD = 100;
+
+    // ETH/USDT报价通道id
+    uint constant ETH_USDT_CHANNEL_ID = 0;
+
+    // ETH/USDT报价对编号
+    uint constant ETH_USDT_PAIR_INDEX = 0;
 
     // 区块时间
     uint constant BLOCK_TIME = 14;
@@ -385,10 +391,16 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         require(tokenAddress == address(0), "HF:only support eth/usdt");
 
         // 获取usdt相对于eth的价格
-        uint[] memory prices = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).lastPriceList {
+        uint[] memory pairIndices = new uint[](1);
+        pairIndices[0] = ETH_USDT_PAIR_INDEX;
+
+        uint[] memory prices = INestBatchPrice2(NEST_BATCH_PRICE).lastPriceList {
             value: msg.value
-        } (USDT_TOKEN_ADDRESS, 2, payback);
+        } (ETH_USDT_CHANNEL_ID, pairIndices, 2, payback);
         
+        // TODO: 验证价格转换是否正确
+        prices[1] = _toUSDTPrice(prices[1]);
+        prices[3] = _toUSDTPrice(prices[3]);
         // 将token价格转化为以usdt为单位计算的价格
         oraclePrice = prices[1];
         uint k = calcRevisedK(prices[3], prices[2], oraclePrice, prices[0]);
@@ -564,5 +576,11 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
             _decodeFloat(account.basePrice),
             uint(account.baseBlock)
         );
+    }
+
+    // 转为USDT价格
+    function _toUSDTPrice(uint rawPrice) internal pure returns (uint) {
+        // TODO: 确定usdt精度计算是否正确
+        return 2000000000 * 1 ether / rawPrice;
     }
 }

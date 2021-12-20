@@ -8,7 +8,7 @@ import "./libs/TransferHelper.sol";
 import "./libs/ABDKMath64x64.sol";
 
 import "./interfaces/IHedgeOptions.sol";
-import "./interfaces/INestPriceFacade.sol";
+import "./interfaces/INestBatchPrice2.sol";
 
 import "./HedgeFrequentlyUsed.sol";
 import "./DCU.sol";
@@ -38,6 +38,12 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
 
     // 期权卖出价值比例，万分制。9750
     uint constant SELL_RATE = 9500;
+
+    // ETH/USDT报价通道id
+    uint constant ETH_USDT_CHANNEL_ID = 0;
+
+    // ETH/USDT报价对编号
+    uint constant ETH_USDT_PAIR_INDEX = 0;
 
     // σ-usdt	0.00021368		波动率，每个币种独立设置（年化120%）
     uint constant SIGMA_SQ = 45659142400;
@@ -204,7 +210,7 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
     ) external payable override {
 
         // 1. 调用预言机获取价格
-        uint oraclePrice = _queryPrice(tokenAddress, msg.value, msg.sender);
+        uint oraclePrice = _queryPrice(msg.value, msg.sender);
 
         // 2. 计算可以买到的期权份数
         uint amount = estimate(tokenAddress, oraclePrice, strikePrice, orientation, exerciseBlock, dcuAmount);
@@ -297,7 +303,7 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
 
         // 1. 获取期权信息
         Option storage option = _options[index];
-        address tokenAddress = option.tokenAddress;
+        //address tokenAddress = option.tokenAddress;
         uint strikePrice = _decodeFloat(option.strikePrice);
         bool orientation = option.orientation;
         uint exerciseBlock = uint(option.exerciseBlock);
@@ -309,22 +315,29 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
 
         // 3. 调用预言机获取价格，读取预言机在指定区块的价格
         // 3.1. 获取token相对于eth的价格
-        uint tokenAmount = 1 ether;
-        uint fee = msg.value;
-        if (tokenAddress != address(0)) {
-            fee = msg.value >> 1;
-            (, tokenAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).findPrice {
-                value: fee
-            } (tokenAddress, exerciseBlock, msg.sender);
-        }
+        // uint tokenAmount = 1 ether;
+        // uint fee = msg.value;
+        // if (tokenAddress != address(0)) {
+        //     fee = msg.value >> 1;
+        //     (, tokenAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).findPrice {
+        //         value: fee
+        //     } (tokenAddress, exerciseBlock, msg.sender);
+        // }
 
         // 3.2. 获取usdt相对于eth的价格
-        (, uint usdtAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).findPrice {
-            value: fee
-        } (USDT_TOKEN_ADDRESS, exerciseBlock, msg.sender);
+        uint[] memory pairIndices = new uint[](1);
+        pairIndices[0] = ETH_USDT_PAIR_INDEX;
+
+        //(, uint usdtAmount) 
+        uint[] memory prices = INestBatchPrice2(NEST_BATCH_PRICE).findPrice {
+            value: msg.value
+        } (ETH_USDT_CHANNEL_ID, pairIndices, exerciseBlock, msg.sender);
 
         // 将token价格转化为以usdt为单位计算的价格
-        uint oraclePrice = usdtAmount * _getBase(tokenAddress) / tokenAmount;
+        //uint oraclePrice = usdtAmount * _getBase(tokenAddress) / tokenAmount;
+        // 将token价格转化为以usdt为单位计算的价格
+        uint oraclePrice = _toUSDTPrice(prices[1]);
+
         // 4. 分情况计算用户可以获得的dcu数量
         uint gain = 0;
         // 计算结算结果
@@ -369,7 +382,7 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
         option.balances[msg.sender] -= amount;
 
         // 3. 调用预言机获取价格，读取预言机在指定区块的价格
-        uint oraclePrice = _queryPrice(tokenAddress, msg.value, msg.sender);
+        uint oraclePrice = _queryPrice(msg.value, msg.sender);
 
         // 4. 分情况计算当前情况下的期权价格
         // 按照平均每14秒出一个块计算
@@ -547,24 +560,30 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
     }
 
     // 查询token价格
-    function _queryPrice(address tokenAddress, uint fee, address payback) private returns (uint oraclePrice) {
-        // 1.1. 获取token相对于eth的价格
-        uint tokenAmount = 1 ether;
-        //uint fee = msg.value;
-        if (tokenAddress != address(0)) {
-            fee >>= 1;
-            (, tokenAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).latestPrice {
-                value: fee
-            } (tokenAddress, payback);
-        }
+    function _queryPrice(uint fee, address payback) private returns (uint oraclePrice) {
+        // // 1.1. 获取token相对于eth的价格
+        // uint tokenAmount = 1 ether;
+        // //uint fee = msg.value;
+        // if (tokenAddress != address(0)) {
+        //     fee >>= 1;
+        //     (, tokenAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).latestPrice {
+        //         value: fee
+        //     } (tokenAddress, payback);
+        // }
 
         // 1.2. 获取usdt相对于eth的价格
-        (, uint usdtAmount) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).latestPrice {
+        uint[] memory pairIndices = new uint[](1);
+        pairIndices[0] = ETH_USDT_PAIR_INDEX;
+
+        //(, uint usdtAmount)
+        uint[] memory prices = INestBatchPrice2(NEST_BATCH_PRICE).lastPriceList {
             value: fee
-        } (USDT_TOKEN_ADDRESS, payback);
+        } (ETH_USDT_CHANNEL_ID, pairIndices, 1, payback);
 
         // 1.3. 将token价格转化为以usdt为单位计算的价格
-        oraclePrice = usdtAmount * _getBase(tokenAddress) / tokenAmount;
+        //oraclePrice = usdtAmount * _getBase(tokenAddress) / tokenAmount;
+        // TODO: 验证价格转换是否正确
+        oraclePrice = _toUSDTPrice(prices[1]);
     }
 
     // 计算看涨期权价格
@@ -638,5 +657,11 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
     /// @return decode format
     function _decodeFloat(uint56 floatValue) private pure returns (uint) {
         return (uint(floatValue) >> 6) << ((uint(floatValue) & 0x3F) << 2);
+    }
+
+    // 转为USDT价格
+    function _toUSDTPrice(uint rawPrice) internal pure returns (uint) {
+        // TODO: 确定usdt精度计算是否正确
+        return 2000000000 * 1 ether / rawPrice;
     }
 }
