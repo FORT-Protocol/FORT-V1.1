@@ -124,8 +124,8 @@ exports.deploy = async function() {
     //     miu: '467938556917', 
     //     minPeriod: 6000 
     // });
-    await usdt.transfer(usdt.address, 0);
-    await usdt.transfer(usdt.address, 0);
+    //await usdt.transfer(usdt.address, 0);
+    //await usdt.transfer(usdt.address, 0);
 
     console.log('9. dcu.setMinter(hedgeOptions.address, 1)');
     await dcu.setMinter(hedgeOptions.address, 1);

@@ -30,7 +30,7 @@ describe('HedgeSwap', function() {
                 hedgeSwap: await getAccountInfo(hedgeSwap),
             };
         }
-
+        return;
         await dcu.setMinter(hedgeSwap.address, 1);
         await nest.transfer(owner.address, toBigInt(100000000));
         

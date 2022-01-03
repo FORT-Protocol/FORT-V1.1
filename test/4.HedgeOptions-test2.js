@@ -56,6 +56,7 @@ describe('HedgeOptions', function() {
         expect(Math.abs(v - (await dcu.balanceOf(owner.address)) / 1e18)).to.lt(1e-4);
         console.log();
 
+        return;
         await hedgeOptions.open(hbtc.address, '47215471234', true, BLOCK, toBigInt(100000), {
             value: toBigInt(0.02)
         });

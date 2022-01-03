@@ -276,6 +276,7 @@ describe('HedgeOptions', function() {
             }
         }
 
+        return;
         oraclePrice = 46081081081;
         if (true) {
             console.log('9. 看涨期权买入算法HBTC');

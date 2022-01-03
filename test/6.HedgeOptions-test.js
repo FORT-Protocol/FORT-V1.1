@@ -81,7 +81,7 @@ describe('HedgeOptions', function() {
             console.log(options);
         }
 
-        if (true) {
+        if (false) {
             console.log('4. list2');
 
             console.log('tokenCount=' + await hedgeOptions.getOptionCount());

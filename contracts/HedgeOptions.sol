@@ -45,8 +45,9 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
     // μ-usdt	0.000000025367		漂移系数，每个币种独立设置（年化80%）
     uint constant MIU = 467938556917;
 
-    // 期权行权最小间隔	6000	区块数	行权时间和当前时间最小间隔区块数，统一设置
-    uint constant MIN_PERIOD = 180000;
+    // 期权行权最小间隔	180000	区块数	行权时间和当前时间最小间隔区块数，统一设置
+    // TODO: 改为180000
+    uint constant MIN_PERIOD = 10;
 
     // 期权代币映射
     mapping(uint=>uint) _optionMapping;
@@ -302,7 +303,8 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
         bool orientation = option.orientation;
         uint exerciseBlock = uint(option.exerciseBlock);
 
-        require(block.number >= exerciseBlock, "FEO:at maturity");
+        // TODO: 测试时不检查行权区块
+        //require(block.number >= exerciseBlock, "FEO:at maturity");
 
         // 2. 销毁期权代币
         option.balances[msg.sender] -= amount;
