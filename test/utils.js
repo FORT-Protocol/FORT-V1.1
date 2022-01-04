@@ -135,12 +135,12 @@ const snd = exports.tableSnd;
 
 exports.Vc = function(S0, K, sigma, miu, T) {
     let d1v = exports.d1(S0, K, sigma, miu, T);
-    return S0 * Math.exp(miu * T) * (1 - snd(d1v / Math.sqrt(T) - sigma * Math.sqrt(T)))
+    return S0 * (1 + miu * T) * (1 - snd(d1v / Math.sqrt(T) - sigma * Math.sqrt(T)))
     - K * (1 - snd(d1v / Math.sqrt(T)));
 };
 
 exports.Vp = function(S0, K, sigma, miu, T) {
     let d1v = exports.d1(S0, K, sigma, miu, T);
     return K * snd(d1v / Math.sqrt(T))
-    - S0 * Math.exp(miu * T) * snd(d1v / Math.sqrt(T) - sigma * Math.sqrt(T));
+    - S0 * (1 + miu * T) * snd(d1v / Math.sqrt(T) - sigma * Math.sqrt(T));
 }

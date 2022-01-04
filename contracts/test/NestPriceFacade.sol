@@ -57,6 +57,7 @@ contract NestPriceFacade is INestPriceFacade {
         // if (height > 90) {
         //     return (height - 1, 2450000000);
         // }
+        require(height >= 0);
         return latestPriceView(tokenAddress);
     }
 

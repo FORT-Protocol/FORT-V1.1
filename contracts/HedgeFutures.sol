@@ -42,14 +42,14 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     // σ-usdt	0.00021368		波动率，每个币种独立设置（年化120%）
     uint constant SIGMA_SQ = 45659142400;
 
-    // μ-usdt	0.000000025367		漂移系数，每个币种独立设置（年化80%）
-    uint constant MIU = 467938556917;
+    // μ-usdt-long 看涨漂移系数，每天0.03%
+    uint constant MIU_LONG = 64051194700;
+
+    // μ-usdt-short 看跌漂移系数，0
+    uint constant MIU_SHORT= 0;
     
     // 最小余额数量，余额小于此值会被清算
     uint constant MIN_VALUE = 10 ether;
-
-    // // 买入永续合约和其他交易之间最小的间隔区块数
-    // uint constant MIN_PERIOD = 100;
 
     // 区块时间
     uint constant BLOCK_TIME = 14;
@@ -312,13 +312,8 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
                 // 改成当账户净值低于Max(保证金 * 2%*g, 10) 时，清算
                 uint minValue = uint(account.balance) * lever / 50;
                 if (balance < (minValue < MIN_VALUE ? MIN_VALUE : minValue)) {
-                    
                     accounts[acc] = Account(uint128(0), uint64(0), uint32(0));
-
-                    //emit Transfer(acc, address(0), balance);
-
                     reward += balance;
-
                     emit Settle(index, acc, msg.sender, balance);
                 }
             }
@@ -365,7 +360,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         uint newPrice = oraclePrice;
         if (uint(account.baseBlock) > 0) {
             newPrice = (balance + dcuAmount) * oraclePrice * basePrice / (
-                basePrice * dcuAmount + (oraclePrice * balance << 64) / _expMiuT(uint(account.baseBlock))
+                basePrice * dcuAmount + (balance << 64) * oraclePrice / _expMiuT(orientation, uint(account.baseBlock))
             );
         }
         
@@ -533,13 +528,13 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
             uint right;
             // 看涨
             if (ORIENTATION) {
-                left = balance + (balance * oraclePrice * LEVER << 64) / basePrice / _expMiuT(baseBlock);
+                left = balance + (LEVER << 64) * balance * oraclePrice / basePrice / _expMiuT(ORIENTATION, baseBlock);
                 right = balance * LEVER;
             } 
             // 看跌
             else {
                 left = balance * (1 + LEVER);
-                right = (balance * oraclePrice * LEVER << 64) / basePrice / _expMiuT(baseBlock);
+                right = (LEVER << 64) * balance * oraclePrice / basePrice / _expMiuT(ORIENTATION, baseBlock);
             }
 
             if (left > right) {
@@ -553,8 +548,17 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     }
 
     // 计算 e^μT
-    function _expMiuT(uint baseBlock) private view returns (uint) {
-        return _toUInt(ABDKMath64x64.exp(_toInt128(MIU * (block.number - baseBlock) * BLOCK_TIME)));
+    function _expMiuT(bool orientation, uint baseBlock) private view returns (uint) {
+        // return _toUInt(ABDKMath64x64.exp(
+        //     _toInt128((orientation ? MIU_LONG : MIU_SHORT) * (block.number - baseBlock) * BLOCK_TIME)
+        // ));
+
+        // 改为单利近似计算: x*(1+rt)
+        // by chenf 2021-12-28 15:27
+
+        // 64位二进制精度的1
+        //int128 constant ONE = 0x10000000000000000;
+        return (orientation ? MIU_LONG : MIU_SHORT) * (block.number - baseBlock) * BLOCK_TIME + 0x10000000000000000;
     }
 
     // 转换永续合约信息

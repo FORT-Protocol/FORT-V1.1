@@ -6,9 +6,10 @@ describe('HedgeOptions', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
         
-        const { eth, usdt, hbtc, dcu, hedgeOptions, hedgeFutures, nestPriceFacade } = await deploy();
+        const { eth, usdt, hbtc, dcu, hedgeOptions, hedgeFutures, nestPriceFacade,
+            MIU_LONG, MIU_SHORT, miuT } = await deploy();
         const sigma = 0.00021368;
-        const miu = 0.000000025367;
+        //const miu = 0.000000025367;
 
         await dcu.setMinter(owner.address, 1);
         await dcu.mint(owner.address, '10000000000000000000000000');
@@ -131,7 +132,7 @@ describe('HedgeOptions', function() {
                 });
                 let fot = await hedgeOptions.getOptionInfo(eth.address, i, true, BLOCK);
                 console.log('fot: ' + toDecimal(await hedgeOptions.balanceOf(fot.index, owner.address)));
-                let vc = Vc(oraclePrice, i, sigma, miu, (BLOCK - await ethers.provider.getBlockNumber()) * 14);
+                let vc = Vc(oraclePrice, i, sigma, MIU_LONG, (BLOCK - await ethers.provider.getBlockNumber()) * 14);
                 let cal = 1000 * 1000000 / vc;
                 console.log('cal: ' + cal);
 
@@ -170,7 +171,7 @@ describe('HedgeOptions', function() {
                 });
                 let fot = await hedgeOptions.getOptionInfo(eth.address, i, false, BLOCK);
                 console.log('fot: ' + toDecimal(await hedgeOptions.balanceOf(fot.index, owner.address)));
-                let vp = Vp(oraclePrice, i, sigma, miu, (BLOCK - await ethers.provider.getBlockNumber()) * 14);
+                let vp = Vp(oraclePrice, i, sigma, MIU_SHORT, (BLOCK - await ethers.provider.getBlockNumber()) * 14);
                 let put = 1000 * 1000000 / vp;
                 console.log('put: ' + put);
 
@@ -210,7 +211,7 @@ describe('HedgeOptions', function() {
                 });
                 let fot = await hedgeOptions.getOptionInfo(eth.address, i, true, BLOCK);
                 console.log('fot: ' + toDecimal(await hedgeOptions.balanceOf(fot.index, owner.address)));
-                let vc = Vc(oraclePrice, i, sigma, miu, (BLOCK - await ethers.provider.getBlockNumber()) * 14);
+                let vc = Vc(oraclePrice, i, sigma, MIU_LONG, (BLOCK - await ethers.provider.getBlockNumber()) * 14);
                 let cal = 1000 * 1000000 / vc;
                 console.log('cal: ' + cal);
 
@@ -249,7 +250,7 @@ describe('HedgeOptions', function() {
                 });
                 let fot = await hedgeOptions.getOptionInfo(eth.address, i, false, BLOCK);
                 console.log('fot: ' + toDecimal(await hedgeOptions.balanceOf(fot.index, owner.address)));
-                let vp = Vp(oraclePrice, i, sigma, miu, (BLOCK - await ethers.provider.getBlockNumber()) * 14);
+                let vp = Vp(oraclePrice, i, sigma, MIU_SHORT, (BLOCK - await ethers.provider.getBlockNumber()) * 14);
                 let put = 1000 * 1000000 / vp;
                 console.log('put: ' + put);
 

@@ -6,7 +6,8 @@ describe('HedgeOptions', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
         
-        const { eth, usdt, hbtc, dcu, hedgeOptions, hedgeFutures, nestPriceFacade } = await deploy();
+        const { eth, usdt, hbtc, dcu, hedgeOptions, hedgeFutures, nestPriceFacade,
+            MIU_LONG, MIU_SHORT } = await deploy();
 
         await dcu.setMinter(owner.address, 1);
         await dcu.mint(owner.address, '10000000000000000000000000');
@@ -35,11 +36,11 @@ describe('HedgeOptions', function() {
             let S0 = 3510;
             let K = 2450;
             let sigma = 0.00021368; //Math.sqrt(4168125400/1e18);
-            let miu = 0.000000025367;
+            //let miu = 0.000000025367;
             let T = (BLOCK - await ethers.provider.getBlockNumber()) * 14;
 
-            let vc = Vc(S0, K, sigma, miu, T);
-            let vp = Vp(S0, K, sigma, miu, T);
+            let vc = Vc(S0, K, sigma, MIU_LONG, T);
+            let vp = Vp(S0, K, sigma, MIU_SHORT, T);
             console.log('vc=' + vc);
             //console.log('vp=' + vp);
             console.log('FOT=' + 1000 / vc);
