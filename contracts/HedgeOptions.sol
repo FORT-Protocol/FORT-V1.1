@@ -4,7 +4,6 @@ pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "./libs/TransferHelper.sol";
 import "./libs/ABDKMath64x64.sol";
 
 import "./interfaces/IHedgeOptions.sol";
@@ -55,6 +54,7 @@ contract HedgeOptions is HedgeFrequentlyUsed, IHedgeOptions {
     // 期权代币映射
     mapping(uint=>uint) _optionMapping;
 
+    // 无用，占位
     // 缓存代币的基数值
     mapping(address=>uint) _bases;
 
