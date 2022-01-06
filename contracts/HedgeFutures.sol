@@ -343,7 +343,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     // 买入永续合约
     function _buy(FutureInfo storage fi, uint index, uint dcuAmount, address tokenAddress, bool orientation) private {
 
-        require(dcuAmount >= 100 ether, "HF:at least 100 dcu");
+        require(dcuAmount >= 50 ether, "HF:at least 50 dcu");
 
         // 1. 销毁用户的dcu
         DCU(DCU_TOKEN_ADDRESS).burn(msg.sender, dcuAmount);
