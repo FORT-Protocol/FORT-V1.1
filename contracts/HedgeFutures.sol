@@ -403,9 +403,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     /// @return Impact cost
     function impactCost(uint vol) public pure override returns (uint) {
         //impactCost = vol / 10000 / 1000;
-        // TODO: 还原冲击成本
-        return 0;
-        //return vol / 10000000;
+        return vol / 10000000;
     }
 
     /// @dev K value is calculated by revised volatility
@@ -442,9 +440,6 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         } else {
             k += _sqrt(1 ether * BLOCK_TIME * SIGMA_SQ * (block.number - bn));
         }
-
-        // TODO: 测试时k设置为0，k单独测试
-        k = 0;
     }
 
     function _sqrt(uint256 x) private pure returns (uint256) {
