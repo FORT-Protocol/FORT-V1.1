@@ -25,7 +25,7 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 888888
+        runs: 8888
       }
     }
   },
@@ -33,7 +33,7 @@ module.exports = {
     mainnet: {
       url: `${config.infura.mainnet.url}`,
       accounts: [config.account.mainnet.key, config.account.mainnet.userA, config.account.mainnet.userB],
-      initialBaseFeePerGas: 90e9,
+      gasPrice: 50e9,
       timeout: 2000000000
     },
     ropsten: {

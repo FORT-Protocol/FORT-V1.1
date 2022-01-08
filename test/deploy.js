@@ -25,7 +25,7 @@ describe('HedgeOptions', function() {
        
         console.log('开始部署');
 
-        const newHedgeOptions = await HedgeOptions.deploy();
+        const newHedgeOptions = await HedgeOptions.deploy({ nonce: 72 });
         console.log('newHedgeOptions: ' + newHedgeOptions.address);
 
         // const newHedgeFutures = await HedgeFutures.deploy();
