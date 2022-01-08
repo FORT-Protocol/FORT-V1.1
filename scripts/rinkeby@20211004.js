@@ -16,6 +16,7 @@ exports.deploy = async function() {
     const HedgeOptions = await ethers.getContractFactory('HedgeOptions');
     const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
     const HedgeVaultForStaking = await ethers.getContractFactory('HedgeVaultForStaking');
+    const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
 
     console.log('** 开始部署合约 rinkeby@20211004.js **');
         
@@ -44,6 +45,8 @@ exports.deploy = async function() {
     // hedgeOptions: 0x702F97D4991e2155576548989fEdEE3971705465
     // hedgeFutures: 0x3Db207CadA55e556ab7A8534A7a6aD9EFfc27B01
     // hedgeVaultForStaking: 0x5cA5E616310c0Cca41B7E4329021C17a5a79a0F1
+    // hedgeSwap: 0x0A94eB67c4bfA14094D6aAF0D1fEc8AfD0E7A25b
+    // proxyAdmin: 0xf870dE82463896d2BC7b369eAEfFcCED03139968
 
     const nest = await TestERC20.attach('0xE313F3f49B647fBEDDC5F2389Edb5c93CBf4EE25'); //.deploy('NEST', 'NEST', 18);
     console.log('nest: ' + nest.address);
@@ -97,6 +100,10 @@ exports.deploy = async function() {
     const hedgeVaultForStaking = await HedgeVaultForStaking.attach('0x5cA5E616310c0Cca41B7E4329021C17a5a79a0F1');
     console.log('hedgeVaultForStaking: ' + hedgeVaultForStaking.address);
 
+    //const hedgeSwap = await upgrades.deployProxy(HedgeSwap, [hedgeGovernance.address], { initializer: 'initialize' });
+    const hedgeSwap = await HedgeSwap.attach('0x0A94eB67c4bfA14094D6aAF0D1fEc8AfD0E7A25b');
+    console.log('hedgeSwap: ' + hedgeSwap.address);
+
     // // await hedgeGovernance.initialize('0x0000000000000000000000000000000000000000');
     // console.log('1. dcu.initialize(hedgeGovernance.address)');
     // await dcu.initialize(hedgeGovernance.address);
@@ -125,6 +132,8 @@ exports.deploy = async function() {
     // await hedgeFutures.update(hedgeGovernance.address);
     // console.log('7. hedgeVaultForStaking.update()');
     // await hedgeVaultForStaking.update(hedgeGovernance.address);
+    // console.log('8. hedgeSwap.update()');
+    // await hedgeSwap.update(hedgeGovernance.address);
 
     // console.log('8. hedgeOptions.setConfig()');
     // await hedgeOptions.setConfig(eth.address, { 
@@ -173,6 +182,7 @@ exports.deploy = async function() {
         cofi: cofi,
         pusd: pusd,
         fortube: fortube,
+        peth: fortube,
 
         hedgeGovernance: hedgeGovernance,
         dcu: dcu,
@@ -180,7 +190,8 @@ exports.deploy = async function() {
         hedgeOptions: hedgeOptions,
         hedgeFutures: hedgeFutures,
         hedgeVaultForStaking: hedgeVaultForStaking,
-        nestPriceFacade: nestPriceFacade
+        nestPriceFacade: nestPriceFacade,
+        hedgeSwap: hedgeSwap
     };
 
     return contracts;

@@ -2,8 +2,18 @@
 
 ## Contract Addresses
 
+### 2021-11-27@bsc_main
+| Name | Interfaces | bsc_main |
+| ---- | ---- | ---- |
+| dcu | IERC20 | 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF |
+| hedgeGovernance | IHedgeGovernance | 0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8 |
+| nestOpenPrice | INestOpenPrice | 0x09CE0e021195BA2c1CDE62A8B187abf810951540 |
+| hedgeOptions | IHedgeOptions | 0x284935F8C571d054Df98eDA8503ea13cde5fd8Cc |
+| hedgeFutures | IHedgeFutures | 0x8c5052f7747D8Ebc2F069286416b6aE8Ad3Cc149 |
+| hedgeSwap | IHedgeSwap | 0x2Cd1Bf9345E969b5DFc6D88000475aD6d487363A |
+
 ### 2021-10-20@mainnet
-| Name | Interfaces | rinkeby |
+| Name | Interfaces | mainnet |
 | ---- | ---- | ---- |
 | nest | IERC20 | 0x04abEdA201850aC0124161F037Efd70c74ddC74C |
 | nhbtc | IERC20 | 0x1F832091fAf289Ed4f50FE7418cFbD2611225d46 |
@@ -17,6 +27,7 @@
 | hedgeVaultForStaking | IHedgeVaultForStaking | 0xE3940A3E94bca34B9175d156a5E9C5728dFE922F |
 | hedgeOptions | IHedgeOptions | 0x6C844d364c2836f2111891111F25C7a24da976A9 |
 | hedgeFutures | IHedgeFutures | 0x622f1CB39AdE2131061C68E61334D41321033ab4 |
+| hedgeSwap | IHedgeSwap | 0x6e7fd4BA02A5a7a75Ea3CcE37e221dC144D606Dd |
 
 ### 2021-10-04@rinkeby
 | Name | Interfaces | rinkeby |

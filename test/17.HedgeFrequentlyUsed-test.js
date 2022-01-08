@@ -9,7 +9,7 @@ describe('HedgeOptions', function() {
         const { 
             eth, usdt, hbtc, dcu, 
             hedgeOptions, hedgeFutures, nestPriceFacade, hedgeGovernance,
-            hedgeVaultForStaking, hedgeDAO
+            hedgeVaultForStaking, hedgeDAO, USDT_DECIMALS
         } = await deploy();
 
         await dcu.setMinter(owner.address, 1);
@@ -27,7 +27,7 @@ describe('HedgeOptions', function() {
             account = account.address;
             return {
                 eth: toDecimal(acc.ethBalance ? await acc.ethBalance() : await ethers.provider.getBalance(account)),
-                usdt: toDecimal(await usdt.balanceOf(account), 6),
+                usdt: toDecimal(await usdt.balanceOf(account), USDT_DECIMALS),
                 dcu: toDecimal(await dcu.balanceOf(account), 18),
             };
         }
@@ -70,7 +70,7 @@ describe('HedgeOptions', function() {
 
         if (true) {
             console.log('2. setUsdtTokenAddress');
-            await hedgeOptions.setUsdtTokenAddress(hedgeGovernance.address);
+            //await hedgeOptions.setUsdtTokenAddress(hedgeGovernance.address);
         }
     });
 });

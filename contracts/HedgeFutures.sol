@@ -8,13 +8,16 @@ import "./libs/TransferHelper.sol";
 import "./libs/ABDKMath64x64.sol";
 
 import "./interfaces/IHedgeFutures.sol";
-import "./interfaces/INestPriceFacade.sol";
 
-import "./HedgeFrequentlyUsed.sol";
+import "./custom/ChainParameter.sol";
+import "./custom/CommonParameter.sol";
+import "./custom/HedgeFrequentlyUsed.sol";
+import "./custom/NestPriceAdapter.sol";
+
 import "./DCU.sol";
 
 /// @dev 永续合约交易
-contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
+contract HedgeFutures is ChainParameter, CommonParameter, HedgeFrequentlyUsed, NestPriceAdapter, IHedgeFutures {
 
     /// @dev 用户账本
     struct Account {
@@ -39,23 +42,11 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         mapping(address=>Account) accounts;
     }
 
-    // 漂移系数，64位二进制小数。年华80%
-    uint constant MIU = 467938556917;
-    
     // 最小余额数量，余额小于此值会被清算
     uint constant MIN_VALUE = 10 ether;
 
-    // 买入永续合约和其他交易之间最小的间隔区块数
-    uint constant MIN_PERIOD = 100;
-
-    // 区块时间
-    uint constant BLOCK_TIME = 14;
-
     // 永续合约映射
     mapping(uint=>uint) _futureMapping;
-
-    // 缓存代币的基数值
-    mapping(address=>uint) _bases;
 
     // 永续合约数组
     FutureInfo[] _futures;
@@ -248,7 +239,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         // 看涨的时候，初始价格乘以(1+k)，卖出价格除以(1+k)
         // 看跌的时候，初始价格除以(1+k)，卖出价格乘以(1+k)
         // 合并的时候，s0用记录的价格，s1用k修正的
-        uint oraclePrice = _queryPrice(fi.tokenAddress, !orientation, msg.sender);
+        uint oraclePrice = _queryPrice(0, fi.tokenAddress, !orientation, msg.sender);
 
         // 更新目标账号信息
         Account memory account = fi.accounts[msg.sender];
@@ -287,7 +278,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
             // 看涨的时候，初始价格乘以(1+k)，卖出价格除以(1+k)
             // 看跌的时候，初始价格除以(1+k)，卖出价格乘以(1+k)
             // 合并的时候，s0用记录的价格，s1用k修正的
-            uint oraclePrice = _queryPrice(fi.tokenAddress, !orientation, msg.sender);
+            uint oraclePrice = _queryPrice(0, fi.tokenAddress, !orientation, msg.sender);
 
             uint reward = 0;
             mapping(address=>Account) storage accounts = fi.accounts;
@@ -309,13 +300,8 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
                 // 改成当账户净值低于Max(保证金 * 2%*g, 10) 时，清算
                 uint minValue = uint(account.balance) * lever / 50;
                 if (balance < (minValue < MIN_VALUE ? MIN_VALUE : minValue)) {
-                    
                     accounts[acc] = Account(uint128(0), uint64(0), uint32(0));
-
-                    //emit Transfer(acc, address(0), balance);
-
                     reward += balance;
-
                     emit Settle(index, acc, msg.sender, balance);
                 }
             }
@@ -345,7 +331,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     // 买入永续合约
     function _buy(FutureInfo storage fi, uint index, uint dcuAmount, address tokenAddress, bool orientation) private {
 
-        require(dcuAmount >= 100 ether, "HF:at least 100 dcu");
+        require(dcuAmount >= 50 ether, "HF:at least 50 dcu");
 
         // 1. 销毁用户的dcu
         DCU(DCU_TOKEN_ADDRESS).burn(msg.sender, dcuAmount);
@@ -354,7 +340,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         // 看涨的时候，初始价格乘以(1+k)，卖出价格除以(1+k)
         // 看跌的时候，初始价格除以(1+k)，卖出价格乘以(1+k)
         // 合并的时候，s0用记录的价格，s1用k修正的
-        uint oraclePrice = _queryPrice(tokenAddress, orientation, msg.sender);
+        uint oraclePrice = _queryPrice(dcuAmount, tokenAddress, orientation, msg.sender);
 
         Account memory account = fi.accounts[msg.sender];
         uint basePrice = _decodeFloat(account.basePrice);
@@ -362,7 +348,7 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
         uint newPrice = oraclePrice;
         if (uint(account.baseBlock) > 0) {
             newPrice = (balance + dcuAmount) * oraclePrice * basePrice / (
-                basePrice * dcuAmount + (oraclePrice * balance << 64) / _expMiuT(uint(account.baseBlock))
+                basePrice * dcuAmount + (balance << 64) * oraclePrice / _expMiuT(orientation, uint(account.baseBlock))
             );
         }
         
@@ -378,93 +364,68 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     }
 
     // 查询预言机价格
-    function _queryPrice(address tokenAddress, bool enlarge, address payback) private returns (uint oraclePrice) {
-        require(tokenAddress == address(0), "HF:only support eth/usdt");
+    function _queryPrice(uint dcuAmount, address tokenAddress, bool enlarge, address payback) private returns (uint oraclePrice) {
+        //require(tokenAddress== address(0), "HF:only support eth/usdt");
 
         // 获取usdt相对于eth的价格
-        (
-            uint[] memory prices,
-            ,//uint triggeredPriceBlockNumber,
-            ,//uint triggeredPriceValue,
-            ,//uint triggeredAvgPrice,
-            uint triggeredSigmaSQ
-        ) = INestPriceFacade(NEST_PRICE_FACADE_ADDRESS).lastPriceListAndTriggeredPriceInfo {
-            value: msg.value
-        } (USDT_TOKEN_ADDRESS, 2, payback);
+        uint[] memory prices = _lastPriceList(tokenAddress, msg.value, payback);
         
         // 将token价格转化为以usdt为单位计算的价格
         oraclePrice = prices[1];
-        uint k = calcRevisedK(triggeredSigmaSQ, prices[3], prices[2], oraclePrice, prices[0]);
+        uint k = calcRevisedK(prices[3], prices[2], oraclePrice, prices[0]);
 
         // 看涨的时候，初始价格乘以(1+k)，卖出价格除以(1+k)
         // 看跌的时候，初始价格除以(1+k)，卖出价格乘以(1+k)
         // 合并的时候，s0用记录的价格，s1用k修正的
         if (enlarge) {
-            oraclePrice = oraclePrice * (1 ether + k) / 1 ether;
+            oraclePrice = oraclePrice * (1 ether + k + impactCost(dcuAmount)) / 1 ether;
         } else {
-            oraclePrice = oraclePrice * 1 ether / (1 ether + k);
+            oraclePrice = oraclePrice * 1 ether / (1 ether + k + impactCost(dcuAmount));
         }
     }
 
+    /// @dev Calculate the impact cost
+    /// @param vol Trade amount in dcu
+    /// @return Impact cost
+    function impactCost(uint vol) public pure override returns (uint) {
+        //impactCost = vol / 10000 / 1000;
+        return vol / 10000000;
+    }
+
     /// @dev K value is calculated by revised volatility
-    /// @param sigmaSQ The square of the volatility (18 decimal places).
     /// @param p0 Last price (number of tokens equivalent to 1 ETH)
     /// @param bn0 Block number of the last price
     /// @param p Latest price (number of tokens equivalent to 1 ETH)
     /// @param bn The block number when (ETH, TOKEN) price takes into effective
-    function calcRevisedK(uint sigmaSQ, uint p0, uint bn0, uint p, uint bn) public view override returns (uint k) {
-        k = _calcK(_calcRevisedSigmaSQ(sigmaSQ, p0, bn0, p, bn), bn);
-    }
-
-    // Calculate the corrected volatility
-    function _calcRevisedSigmaSQ(
-        uint sigmaSQ,
-        uint p0, 
-        uint bn0, 
-        uint p, 
-        uint bn
-    ) private pure returns (uint revisedSigmaSQ) {
-        // sq2 = sq1 * 0.9 + rq2 * dt * 0.1
-        // sq1 = (sq2 - rq2 * dt * 0.1) / 0.9
-        // 1. 
-        // rq2 <= 4 * dt * sq1
-        // sqt = sq2
-        // 2. rq2 > 4 * dt * sq1 && rq2 <= 9 * dt * sq1
-        // sqt = (sq1 + rq2 * dt) / 2
-        // 3. rq2 > 9 * dt * sq1
-        // sqt = sq1 * 0.2 + rq2 * dt * 0.8
-
-        uint rq2 = p * 1 ether / p0;
-        if (rq2 > 1 ether) {
-            rq2 -= 1 ether;
+    function calcRevisedK(uint p0, uint bn0, uint p, uint bn) public view override returns (uint k) {
+        uint sigmaISQ = p * 1 ether / p0;
+        if (sigmaISQ > 1 ether) {
+            sigmaISQ -= 1 ether;
         } else {
-            rq2 = 1 ether - rq2;
-        }
-        rq2 = rq2 * rq2 / 1 ether;
-
-        uint dt = (bn - bn0) * BLOCK_TIME;
-        uint sq1 = 0;
-        uint rq2dt = rq2 / dt;
-        if (sigmaSQ * 10 > rq2dt) {
-            sq1 = (sigmaSQ * 10 - rq2dt) / 9;
+            sigmaISQ = 1 ether - sigmaISQ;
         }
 
-        uint dds = dt * dt * dt * sq1;
-        if (rq2 <= (dds << 2)) {
-            revisedSigmaSQ = sigmaSQ;
-        } else if (rq2 <= 9 * dds) {
-            revisedSigmaSQ = (sq1 + rq2dt) >> 1;
+        // James:
+        // fort算法 把前面一项改成 max ((p2-p1)/p1,0.002) 后面不变
+        // jackson:
+        // 好
+        // jackson:
+        // 要取绝对值吧
+        // James:
+        // 对的
+        if (sigmaISQ > 0.002 ether) {
+            k = sigmaISQ;
         } else {
-            revisedSigmaSQ = (sq1 + (rq2dt << 2)) / 5;
+            k = 0.002 ether;
         }
-    }
 
-    /// @dev Calc K value
-    /// @param sigmaSQ The square of the volatility (18 decimal places).
-    /// @param bn The block number when (ETH, TOKEN) price takes into effective
-    /// @return k The K value
-    function _calcK(uint sigmaSQ, uint bn) private view returns (uint k) {
-        k = 0.002 ether + (_sqrt((block.number - bn) * BLOCK_TIME * sigmaSQ * 1 ether) >> 1);
+        sigmaISQ = sigmaISQ * sigmaISQ / (bn - bn0) / BLOCK_TIME / 1 ether;
+
+        if (sigmaISQ > SIGMA_SQ) {
+            k += _sqrt(1 ether * BLOCK_TIME * (block.number - bn) * sigmaISQ);
+        } else {
+            k += _sqrt(1 ether * BLOCK_TIME * SIGMA_SQ * (block.number - bn));
+        }
     }
 
     function _sqrt(uint256 x) private pure returns (uint256) {
@@ -548,13 +509,13 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
             uint right;
             // 看涨
             if (ORIENTATION) {
-                left = balance + (balance * oraclePrice * LEVER << 64) / basePrice / _expMiuT(baseBlock);
+                left = balance + (LEVER << 64) * balance * oraclePrice / basePrice / _expMiuT(ORIENTATION, baseBlock);
                 right = balance * LEVER;
             } 
             // 看跌
             else {
                 left = balance * (1 + LEVER);
-                right = (balance * oraclePrice * LEVER << 64) / basePrice / _expMiuT(baseBlock);
+                right = (LEVER << 64) * balance * oraclePrice / basePrice / _expMiuT(ORIENTATION, baseBlock);
             }
 
             if (left > right) {
@@ -568,8 +529,17 @@ contract HedgeFutures is HedgeFrequentlyUsed, IHedgeFutures {
     }
 
     // 计算 e^μT
-    function _expMiuT(uint baseBlock) private view returns (uint) {
-        return _toUInt(ABDKMath64x64.exp(_toInt128(MIU * (block.number - baseBlock) * BLOCK_TIME)));
+    function _expMiuT(bool orientation, uint baseBlock) private view returns (uint) {
+        // return _toUInt(ABDKMath64x64.exp(
+        //     _toInt128((orientation ? MIU_LONG : MIU_SHORT) * (block.number - baseBlock) * BLOCK_TIME)
+        // ));
+
+        // 改为单利近似计算: x*(1+rt)
+        // by chenf 2021-12-28 15:27
+
+        // 64位二进制精度的1
+        //int128 constant ONE = 0x10000000000000000;
+        return (orientation ? MIU_LONG : MIU_SHORT) * (block.number - baseBlock) * BLOCK_TIME + 0x10000000000000000;
     }
 
     // 转换永续合约信息

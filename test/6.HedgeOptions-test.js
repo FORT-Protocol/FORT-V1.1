@@ -6,7 +6,7 @@ describe('HedgeOptions', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
         
-        const { eth, usdt, hbtc, dcu, hedgeOptions, hedgeFutures, nestPriceFacade } = await deploy();
+        const { eth, usdt, hbtc, dcu, hedgeOptions, hedgeFutures, nestPriceFacade, USDT_DECIMALS } = await deploy();
 
         await dcu.setMinter(owner.address, 1);
         await dcu.mint(owner.address, '10000000000000000000000000');
@@ -24,7 +24,7 @@ describe('HedgeOptions', function() {
             account = account.address;
             return {
                 eth: toDecimal(acc.ethBalance ? await acc.ethBalance() : await ethers.provider.getBalance(account)),
-                usdt: toDecimal(await usdt.balanceOf(account), 6),
+                usdt: toDecimal(await usdt.balanceOf(account), USDT_DECIMALS),
                 dcu: toDecimal(await dcu.balanceOf(account), 18),
             };
         }
@@ -89,9 +89,9 @@ describe('HedgeOptions', function() {
                 value: toBigInt(0.01)
             });
 
-            await hedgeOptions.open(hbtc.address, 52450000000, false, 100000, toBigInt(100000), {
-                value: toBigInt(0.02)
-            });
+            // await hedgeOptions.open(hbtc.address, 52450000000, false, 100000, toBigInt(100000), {
+            //     value: toBigInt(0.02)
+            // });
             console.log('tokenCount=' + await hedgeOptions.getOptionCount());
             let options = await hedgeOptions.list(0, 5, 0);
             console.log(options);
@@ -99,14 +99,14 @@ describe('HedgeOptions', function() {
             options = await hedgeOptions.list(0, 5, 1);
             console.log(options);
 
-            let fot1 = await hedgeOptions.getOptionInfo(eth.address, 2450000000, true, 100000);
-            let fot2 = await hedgeOptions.getOptionInfo(hbtc.address, 52450000000, false, 100000);
+            //let fot1 = await hedgeOptions.getOptionInfo(eth.address, 2450000000, true, 100000);
+            //let fot2 = await hedgeOptions.getOptionInfo(hbtc.address, 52450000000, false, 100000);
 
-            console.log('fot1: ' + fot1.index);
-            console.log('fot2: ' + fot2.index);
+            //console.log('fot1: ' + fot1.index);
+            //console.log('fot2: ' + fot2.index);
 
-            console.log('fot1-name: ' + fot1);
-            console.log('fot2-name: ' + fot2);
+            //console.log('fot1-name: ' + fot1);
+            //console.log('fot2-name: ' + fot2);
         }
     });
 });
