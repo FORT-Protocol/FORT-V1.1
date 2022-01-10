@@ -38,7 +38,8 @@ contract HedgeOptions is ChainParameter, CommonParameter, HedgeFrequentlyUsed, N
     uint constant SELL_RATE = 9500;
 
     // 期权行权最小间隔	840000	区块数	行权时间和当前时间最小间隔区块数，统一设置
-    uint constant MIN_PERIOD = 840000;
+    // TODO: 改为 840000
+    uint constant MIN_PERIOD = 10;
 
     // 期权代币数组
     Option[] _options;
@@ -250,7 +251,8 @@ contract HedgeOptions is ChainParameter, CommonParameter, HedgeFrequentlyUsed, N
         bool orientation = option.orientation;
         uint exerciseBlock = uint(option.exerciseBlock);
 
-        require(block.number >= exerciseBlock, "FEO:at maturity");
+        // TODO: 测试时不验证行权区块
+        // require(block.number >= exerciseBlock, "FEO:at maturity");
 
         // 2. 销毁期权代币
         //option.balances[msg.sender] -= amount;
