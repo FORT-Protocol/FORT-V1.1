@@ -25,11 +25,11 @@ describe('HedgeOptions', function() {
        
         console.log('开始部署');
 
-        const newHedgeOptions = await HedgeOptions.deploy({ nonce: 72 });
-        console.log('newHedgeOptions: ' + newHedgeOptions.address);
+        // const newHedgeOptions = await HedgeOptions.deploy({ nonce: 72 });
+        // console.log('newHedgeOptions: ' + newHedgeOptions.address);
 
-        // const newHedgeFutures = await HedgeFutures.deploy();
-        // console.log('newHedgeFutures: ' + newHedgeFutures.address);
+        const newHedgeFutures = await HedgeFutures.deploy({ nonce: 74 });
+        console.log('newHedgeFutures: ' + newHedgeFutures.address);
         
         console.log('部署完成');
         return;
