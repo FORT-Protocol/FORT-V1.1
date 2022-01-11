@@ -27,7 +27,7 @@ import "../HedgeBase.sol";
 contract HedgeFrequentlyUsed is HedgeBase {
 
     // NEST代币地址
-    address constant NEST_TOKEN_ADDRESS = 0x98f8669F6481EbB341B522fCD3663f79A3d1A6A7;
+    address constant NEST_TOKEN_ADDRESS = 0x58694D405C8Cd917880FC1E23729fc0B90B7732c;
 
     // Address of DCU contract
     //address constant DCU_TOKEN_ADDRESS = ;
@@ -42,7 +42,7 @@ contract HedgeFrequentlyUsed is HedgeBase {
     //address USDT_TOKEN_ADDRESS;
 
     // USDT代币的基数
-    uint constant USDT_BASE = 1 ether;
+    uint constant USDT_BASE = 1000000;
 
     /// @dev Rewritten in the implementation contract, for load other contract addresses. Call 
     ///      super.update(newGovernance) when overriding, and override method without onlyGovernance

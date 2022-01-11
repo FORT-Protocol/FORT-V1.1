@@ -24,8 +24,7 @@ describe('HedgeOptions', function() {
         // const newHedgeOptions = await HedgeOptions.deploy();
         // console.log('newHedgeOptions: ' + newHedgeOptions.address);
         
-        const newHedgeFutures = await HedgeFutures.deploy();
-        console.log('newHedgeFutures: ' + newHedgeFutures.address);
+       
 
         return;
 

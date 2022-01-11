@@ -72,6 +72,14 @@ module.exports = {
       accounts: [config.account.bsc_main.key, config.account.bsc_main.userA, config.account.bsc_main.userB],
       timeout: 2000000000
     },
+    mumbai: {
+      url: "https://matic-mumbai.chainstacklabs.com",
+      chainId: 80001,
+      initialBaseFeePerGas: 5e9,
+      gas: 6000000,
+      accounts: [config.account.mumbai.key, config.account.mumbai.userA, config.account.mumbai.userB],
+      timeout: 2000000000
+    },
     hardhat: {
       gas: 6000000,
       gasPrice: 1e9

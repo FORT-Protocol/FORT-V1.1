@@ -6,5 +6,5 @@ pragma solidity ^0.8.6;
 contract ChainParameter {
 
     // 区块时间
-    uint constant BLOCK_TIME = 3;
+    uint constant BLOCK_TIME = 2;
 }
