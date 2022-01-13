@@ -153,7 +153,7 @@ exports.deploy = async function() {
 
         hedgeGovernance: hedgeGovernance,
         dcu: dcu,
-        hedgeDAO: hedgeDAO,
+        //hedgeDAO: hedgeDAO,
         hedgeOptions: hedgeOptions,
         hedgeFutures: hedgeFutures,
         //hedgeVaultForStaking: hedgeVaultForStaking,
