@@ -18,6 +18,7 @@ import "../HedgeBase.sol";
 //     // Address of NestOpenPrice contract
 //     address constant NEST_OPEN_PRICE = 0x09CE0e021195BA2c1CDE62A8B187abf810951540;
     
+//     // TODO: 改为 1000000
 //     // USDT代币的基数
 //     uint constant USDT_BASE = 1 ether;
 // }
@@ -42,7 +43,8 @@ contract HedgeFrequentlyUsed is HedgeBase {
     //address USDT_TOKEN_ADDRESS;
 
     // USDT代币的基数
-    uint constant USDT_BASE = 1000000;
+    // TODO: 改为 1000000
+    uint constant USDT_BASE = 1 ether;
 
     /// @dev Rewritten in the implementation contract, for load other contract addresses. Call 
     ///      super.update(newGovernance) when overriding, and override method without onlyGovernance

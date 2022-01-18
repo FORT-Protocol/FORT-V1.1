@@ -6,9 +6,11 @@ import "../interfaces/INestPriceFacade.sol";
 import "../interfaces/INestOpenPrice.sol";
 import "../interfaces/INestBatchPrice2.sol";
 
+import "../custom/HedgeFrequentlyUsed.sol";
+
 import "hardhat/console.sol";
 
-contract NestPriceFacade is INestPriceFacade, INestOpenPrice, INestBatchPrice2 {
+contract NestPriceFacade is HedgeFrequentlyUsed, INestPriceFacade, INestOpenPrice, INestBatchPrice2 {
     
     struct Price {
         uint price;
@@ -35,7 +37,7 @@ contract NestPriceFacade is INestPriceFacade, INestOpenPrice, INestBatchPrice2 {
 
         Price memory p = _prices[tokenAddress];
         if (p.price == 0) {
-            p = Price(2700 * 1 ether, 1);
+            p = Price(2700 * USDT_BASE, 1);
         }
 
         return (block.number - p.dbn, p.price);
@@ -295,7 +297,7 @@ contract NestPriceFacade is INestPriceFacade, INestOpenPrice, INestBatchPrice2 {
     address DEFAULT_ADDRESS;
 
     function _toETHPrice(uint price) private pure returns (uint) {
-        return 2000 ether * 1 ether / price;
+        return 2000 * USDT_BASE * 1 ether / price;
     }
 
     /// @dev Get the latest effective price
