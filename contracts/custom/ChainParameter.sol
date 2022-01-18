@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.6;
 
-/// @dev Base contract of Hedge
+/// @dev Base contract of Fort
 contract ChainParameter {
 
     // 区块时间

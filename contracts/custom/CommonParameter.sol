@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.6;
 
-/// @dev Base contract of Hedge
+/// @dev Base contract of Fort
 contract CommonParameter {
 
     // σ-usdt	0.00021368		波动率，每个币种独立设置（年化120%）

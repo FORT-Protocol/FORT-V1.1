@@ -2,11 +2,11 @@ const { expect } = require('chai');
 const { deploy } = require('../scripts/deploy.js');
 const { toBigInt, toDecimal, showReceipt, snd, tableSnd, d1, Vc, Vp } = require('./utils.js');
 
-describe('HedgeOptions', function() {
+describe('FortOptions', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
-        const HedgeOptions = await ethers.getContractFactory('HedgeOptions');
-        const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
+        const FortOptions = await ethers.getContractFactory('FortOptions');
+        const FortFutures = await ethers.getContractFactory('FortFutures');
 
         const { 
             eth, usdt, dcu, 
@@ -14,24 +14,24 @@ describe('HedgeOptions', function() {
             pusd,
             peth,
 
-            hedgeGovernance,
-            hedgeOptions, hedgeFutures,
-            nestPriceFacade, hedgeSwap
+            fortGovernance,
+            fortOptions, fortFutures,
+            nestPriceFacade, fortSwap
         } = await deploy();
 
         console.log('ok');
 
-        const newHedgeOptions = await HedgeOptions.deploy();
-        console.log('newHedgeOptions: ' + newHedgeOptions.address);
+        const newFortOptions = await FortOptions.deploy();
+        console.log('newFortOptions: ' + newFortOptions.address);
 
-        const newHedgeFutures = await HedgeFutures.deploy();
-        console.log('newHedgeFutures: ' + newHedgeFutures.address);
+        const newFortFutures = await FortFutures.deploy();
+        console.log('newFortFutures: ' + newFortFutures.address);
         
         return;
 
-        //await nest.approve(hedgeSwap.address, toBigInt(100000000));
-        //await hedgeSwap.setNestTokenAddress(nest.address);
-        //await hedgeSwap.deposit(1);
+        //await nest.approve(fortSwap.address, toBigInt(100000000));
+        //await fortSwap.setNestTokenAddress(nest.address);
+        //await fortSwap.deposit(1);
 
         //await usdt.approve('0x4A448cBb12e449D7031f36C8122eCE6dDdf9cc84', toBigInt(10000000));
         await usdt.transfer(owner.address, toBigInt(10000000));
@@ -72,24 +72,24 @@ describe('HedgeOptions', function() {
         if (false) {
         // 2. 设置挖矿启动参数
         // 取一个好数字，锁仓准备取为 13408888 ~ 13458888
-        console.log('9.hedgeVaultForStaking.setConfig()');
-        await hedgeVaultForStaking.setConfig(1000000000000000000n, 9500233, 9500500);
-        console.log('10.hedgeVaultForStaking.batchSetPoolWeight()');
-        await hedgeVaultForStaking.batchSetPoolWeight(xtokens, cycles, weights);
+        console.log('9.fortVaultForStaking.setConfig()');
+        await fortVaultForStaking.setConfig(1000000000000000000n, 9500233, 9500500);
+        console.log('10.fortVaultForStaking.batchSetPoolWeight()');
+        await fortVaultForStaking.batchSetPoolWeight(xtokens, cycles, weights);
         }
 
         if (true) {
         // 2. 设置挖矿启动参数
         // 取一个好数字，锁仓准备取为 13408888 ~ 13458888
-        console.log('9.hedgeVaultForStaking.setConfig()');
-        await hedgeVaultForStaking.setConfig(100000000000000000n, 9500233, 9500400 - TWO_YEAR);
-        console.log('10.hedgeVaultForStaking.batchSetPoolWeight()');
-        await hedgeVaultForStaking.batchSetPoolWeight([nest.address], [TWO_YEAR], [36000000]);
+        console.log('9.fortVaultForStaking.setConfig()');
+        await fortVaultForStaking.setConfig(100000000000000000n, 9500233, 9500400 - TWO_YEAR);
+        console.log('10.fortVaultForStaking.batchSetPoolWeight()');
+        await fortVaultForStaking.batchSetPoolWeight([nest.address], [TWO_YEAR], [36000000]);
 
-        console.log('11.hedgeVaultForStaking.setConfig()');
-        await hedgeVaultForStaking.setConfig(100000000000000000n, 9500233, 9500400 - ONE_MONTH);
-        console.log('12.hedgeVaultForStaking.batchSetPoolWeight()');
-        await hedgeVaultForStaking.batchSetPoolWeight([
+        console.log('11.fortVaultForStaking.setConfig()');
+        await fortVaultForStaking.setConfig(100000000000000000n, 9500233, 9500400 - ONE_MONTH);
+        console.log('12.fortVaultForStaking.batchSetPoolWeight()');
+        await fortVaultForStaking.batchSetPoolWeight([
             nest.address,
             nhbtc.address,
             cofi.address,
@@ -109,12 +109,12 @@ describe('HedgeOptions', function() {
             500000
         ]);
 
-        console.log('13.hedgeVaultForStaking.setConfig()');
-        await hedgeVaultForStaking.setConfig(100000000000000000n, 9500233, 9500400);
+        console.log('13.fortVaultForStaking.setConfig()');
+        await fortVaultForStaking.setConfig(100000000000000000n, 9500233, 9500400);
         }
         let total = 0n;
         for (var i = 0; i < xtokens.length; ++i) {
-            let xi = await hedgeVaultForStaking.getChannelInfo(xtokens[i], cycles[i]);
+            let xi = await fortVaultForStaking.getChannelInfo(xtokens[i], cycles[i]);
             total += BigInt(xi.totalRewards);
             
             let token = await TestERC20.attach(xtokens[i]);
@@ -131,19 +131,19 @@ describe('HedgeOptions', function() {
 
         return;
 
-        let ba = await hedgeGovernance.getBuiltinAddress();
+        let ba = await fortGovernance.getBuiltinAddress();
         console.log(ba);
         expect(ba.dcuToken).to.eq(dcu.address);
-        expect(ba.hedgeVaultForStaking).to.eq(hedgeVaultForStaking.address);
+        expect(ba.fortVaultForStaking).to.eq(fortVaultForStaking.address);
         expect(ba.nestPriceFacade).to.eq(nestPriceFacade.address);
         
-        expect(await hedgeGovernance.getDCUTokenAddress()).to.eq(dcu.address);
-        expect(await hedgeGovernance.getHedgeVaultForStakingAddress()).to.eq(hedgeVaultForStaking.address);
-        expect(await hedgeGovernance.getNestPriceFacade()).to.eq(nestPriceFacade.address);
+        expect(await fortGovernance.getDCUTokenAddress()).to.eq(dcu.address);
+        expect(await fortGovernance.getFortVaultForStakingAddress()).to.eq(fortVaultForStaking.address);
+        expect(await fortGovernance.getNestPriceFacade()).to.eq(nestPriceFacade.address);
 
         console.log('minter1: ' + await dcu.checkMinter(owner.address));
-        console.log('minter2: ' + await dcu.checkMinter(hedgeVaultForStaking.address));
+        console.log('minter2: ' + await dcu.checkMinter(fortVaultForStaking.address));
 
-        console.log(await hedgeVaultForStaking.getConfig());
+        console.log(await fortVaultForStaking.getConfig());
     });
 });

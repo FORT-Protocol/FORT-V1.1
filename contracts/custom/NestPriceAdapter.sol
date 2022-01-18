@@ -5,10 +5,10 @@ pragma solidity ^0.8.6;
 import "../interfaces/INestOpenPrice.sol";
 import "../interfaces/INestBatchPrice2.sol";
 
-import "./HedgeFrequentlyUsed.sol";
+import "./FortFrequentlyUsed.sol";
 
-// /// @dev Base contract of Hedge
-// contract NestPriceAdapter is HedgeFrequentlyUsed {
+// /// @dev Base contract of Fort
+// contract NestPriceAdapter is FortFrequentlyUsed {
 
 //     // ETH/USDT报价通道id
 //     uint constant ETH_USDT_CHANNEL_ID = 0;
@@ -58,8 +58,8 @@ import "./HedgeFrequentlyUsed.sol";
 //     }
 // }
 
-/// @dev Base contract of Hedge
-contract NestPriceAdapter is HedgeFrequentlyUsed {
+/// @dev Base contract of Fort
+contract NestPriceAdapter is FortFrequentlyUsed {
 
     // ETH/USDT报价通道id
     uint constant ETH_USDT_CHANNEL_ID = 0;
