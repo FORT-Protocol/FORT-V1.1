@@ -422,12 +422,15 @@ contract FortFutures is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
             k = 0.002 ether;
         }
 
-        sigmaISQ = sigmaISQ * sigmaISQ / (bn - bn0) / BLOCK_TIME / 1 ether;
+        // sigmaISQ = sigmaISQ * sigmaISQ / (bn - bn0) / BLOCK_TIME / 1 ether;
+        sigmaISQ = sigmaISQ * sigmaISQ / (bn - bn0) / BLOCK_TIME / 1e15;
 
         if (sigmaISQ > SIGMA_SQ) {
-            k += _sqrt(1 ether * BLOCK_TIME * (block.number - bn) * sigmaISQ);
+            // k += _sqrt(1 ether * BLOCK_TIME * (block.number - bn) * sigmaISQ);
+            k += _sqrt(1e15 * BLOCK_TIME * (block.number - bn) * sigmaISQ);
         } else {
-            k += _sqrt(1 ether * BLOCK_TIME * SIGMA_SQ * (block.number - bn));
+            // k += _sqrt(1 ether * BLOCK_TIME * SIGMA_SQ * (block.number - bn));
+            k += _sqrt(1e15 * BLOCK_TIME * SIGMA_SQ * (block.number - bn));
         }
 
         // TODO: 测试时不计算k
@@ -545,7 +548,8 @@ contract FortFutures is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
 
         // 64位二进制精度的1
         //int128 constant ONE = 0x10000000000000000;
-        return (orientation ? MIU_LONG : MIU_SHORT) * (block.number - baseBlock) * BLOCK_TIME + 0x10000000000000000;
+        //return (orientation ? MIU_LONG : MIU_SHORT) * (block.number - baseBlock) * BLOCK_TIME + 0x10000000000000000;
+        return (orientation ? MIU_LONG : MIU_SHORT) * (block.number - baseBlock) * BLOCK_TIME / 1000 + 0x10000000000000000;
     }
 
     // 转换永续合约信息

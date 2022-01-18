@@ -341,7 +341,7 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
         //require(tokenAddress== address(0), "FEO:not allowed");
 
         // 按照平均每14秒出一个块计算
-        uint T = (exerciseBlock - block.number) * BLOCK_TIME;
+        uint T = (exerciseBlock - block.number) * BLOCK_TIME / 1000;
         v = orientation 
             ? _calcVc(oraclePrice, T, strikePrice) 
             : _calcVp(oraclePrice, T, strikePrice);
