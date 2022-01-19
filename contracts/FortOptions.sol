@@ -249,8 +249,7 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
         bool orientation = option.orientation;
         uint exerciseBlock = uint(option.exerciseBlock);
 
-        // TODO: 测试时不检查行权区块
-        //require(block.number >= exerciseBlock, "FEO:at maturity");
+        require(block.number >= exerciseBlock, "FEO:at maturity");
 
         // 2. 销毁期权代币
         //option.balances[msg.sender] -= amount;
