@@ -52,7 +52,7 @@ describe('FortOptions', function() {
             console.log('checkMinter:' + await dcu.checkMinter(owner.address));
             await dcu.setMinter(owner.address, 0);
             console.log('checkMinter:' + await dcu.checkMinter(owner.address));
-            await dcu.setMinter(owner.address, 1);
+            await dcu.setMinter(owner.address, 3);
             console.log('checkMinter:' + await dcu.checkMinter(owner.address));
         }
 

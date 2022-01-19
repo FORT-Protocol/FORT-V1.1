@@ -125,11 +125,11 @@ exports.deploy = async function() {
     //     minPeriod: 6000 
     // });
 
-    console.log('9. dcu.setMinter(fortOptions.address, 1)');
-    await dcu.setMinter(fortOptions.address, 1);
-    console.log('10. dcu.setMinter(fortFutures.address, 1)');
-    await dcu.setMinter(fortFutures.address, 1);
-    console.log('11. dcu.setMinter(fortVaultForStaking.address, 1)');
+    console.log('9. dcu.setMinter(fortOptions.address, 3)');
+    await dcu.setMinter(fortOptions.address, 3);
+    console.log('10. dcu.setMinter(fortFutures.address, 3)');
+    await dcu.setMinter(fortFutures.address, 3);
+    console.log('11. dcu.setMinter(fortVaultForStaking.address, 3)');
     await dcu.setMinter(fortVaultForStaking.address, 1);
 
     //await usdt.transfer(usdt.address, 0);
