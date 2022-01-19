@@ -16,7 +16,7 @@ exports.deploy = async function() {
     const FortOptions = await ethers.getContractFactory('FortOptions');
     const FortFutures = await ethers.getContractFactory('FortFutures');
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
-    const FortSwap = await ethers.getContractFactory('FortSwap');
+    //const FortSwap = await ethers.getContractFactory('FortSwap');
 
     console.log('** 开始部署合约 deploy.proxy.js **');
     
@@ -77,9 +77,9 @@ exports.deploy = async function() {
     //const fortVaultForStaking = await FortVaultForStaking.attach('0x0000000000000000000000000000000000000000');
     console.log('fortVaultForStaking: ' + fortVaultForStaking.address);
 
-    const fortSwap = await upgrades.deployProxy(FortSwap, [fortGovernance.address], { initializer: 'initialize' });
-    //const fortSwap = await FortSwap.attach('0x0000000000000000000000000000000000000000');
-    console.log('fortSwap: ' + fortSwap.address);
+    // const fortSwap = await upgrades.deployProxy(FortSwap, [fortGovernance.address], { initializer: 'initialize' });
+    // //const fortSwap = await FortSwap.attach('0x0000000000000000000000000000000000000000');
+    // console.log('fortSwap: ' + fortSwap.address);
 
     // await fortGovernance.initialize('0x0000000000000000000000000000000000000000');
     console.log('1. dcu.initialize(fortGovernance.address)');
@@ -99,18 +99,18 @@ exports.deploy = async function() {
         nestPriceFacade.address
     );
 
-    console.log('3. dcu.update()');
-    await dcu.update(fortGovernance.address);
-    console.log('4. fortDAO.update()');
-    await fortDAO.update(fortGovernance.address);
+    // console.log('3. dcu.update()');
+    // await dcu.update(fortGovernance.address);
+    // console.log('4. fortDAO.update()');
+    // await fortDAO.update(fortGovernance.address);
     console.log('5. fortOptions.update()');
     await fortOptions.update(fortGovernance.address);
     console.log('6. fortFutures.update()');
     await fortFutures.update(fortGovernance.address);
     console.log('7. fortVaultForStaking.update()');
     await fortVaultForStaking.update(fortGovernance.address);
-    console.log('8. fortVaultForStaking.update()');
-    await fortSwap.update(fortGovernance.address);
+    // console.log('8. fortVaultForStaking.update()');
+    // await fortSwap.update(fortGovernance.address);
 
     // console.log('8. fortOptions.setConfig()');
     // await fortOptions.setConfig(eth.address, { 
@@ -132,8 +132,11 @@ exports.deploy = async function() {
     console.log('11. dcu.setMinter(fortVaultForStaking.address, 3)');
     await dcu.setMinter(fortVaultForStaking.address, 1);
 
-    //await usdt.transfer(usdt.address, 0);
-    //await usdt.transfer(usdt.address, 0);
+    await usdt.transfer(usdt.address, 0);
+    await usdt.transfer(usdt.address, 0);
+    await usdt.transfer(usdt.address, 0);
+    await usdt.transfer(usdt.address, 0);
+    await usdt.transfer(usdt.address, 0);
     //await fortOptions.setUsdtTokenAddress(usdt.address);
     //await fortFutures.setUsdtTokenAddress(usdt.address);
 
@@ -167,7 +170,7 @@ exports.deploy = async function() {
         fortFutures: fortFutures,
         fortVaultForStaking: fortVaultForStaking,
         nestPriceFacade: nestPriceFacade,
-        fortSwap: fortSwap,
+        //fortSwap: fortSwap,
 
         BLOCK_TIME: BLOCK_TIME,
         USDT_DECIMALS: 18,
