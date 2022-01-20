@@ -16,21 +16,22 @@ exports.deploy = async function() {
     const FortOptions = await ethers.getContractFactory('FortOptions');
     const FortFutures = await ethers.getContractFactory('FortFutures');
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
-    const FortSwap = await ethers.getContractFactory('FortSwap');
+    //const FortSwap = await ethers.getContractFactory('FortSwap');
 
     console.log('** 开始部署合约 polygon_main@20220120.js **');
     
-    const dcu = await DCU.deploy();
-    //const dcu = await DCU.attach('0x0000000000000000000000000000000000000000');
-    console.log('dcu: ' + dcu.address);
+    // dcu: 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF
+    // fortGovernance: 0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8
 
-    // TODO: 1. 将部署的DCU地址更新到FortFrequentlyUsed中
+    //const dcu = await DCU.deploy();
+    const dcu = await DCU.attach('0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF');
+    console.log('dcu: ' + dcu.address);
 
     // TODO: 2. 根据DCU的部署情况，观察脚本返回的合约地址是否正确
     // 部署fortGovernance时，需要即时备份openzeeplin的数据文件，以便在得不到正确地址时，可以手动修改
-    // const fortGovernance = await upgrades.deployProxy(FortGovernance, ['0x0000000000000000000000000000000000000000'], { initializer: 'initialize' });
-    // //const fortGovernance = await FortGovernance.attach('0x0000000000000000000000000000000000000000');
-    // console.log('fortGovernance: ' + fortGovernance.address);
+    //const fortGovernance = await upgrades.deployProxy(FortGovernance, ['0x0000000000000000000000000000000000000000'], { initializer: 'initialize' });
+    const fortGovernance = await FortGovernance.attach('0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8');
+    console.log('fortGovernance: ' + fortGovernance.address);
 
     // console.log('1. dcu.initialize(fortGovernance.address)');
     // await dcu.initialize(fortGovernance.address);

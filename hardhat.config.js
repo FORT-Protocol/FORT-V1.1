@@ -81,7 +81,7 @@ module.exports = {
       timeout: 2000000000
     },
     polygon_main: {
-      url: "https://rpc-mainnet.matic.network",
+      url: "https://matic-mainnet.chainstacklabs.com",
       chainId: 137,
       initialBaseFeePerGas: 50e9,
       gas: 6000000,

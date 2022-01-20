@@ -2,6 +2,12 @@
 
 ## Contract Addresses
 
+### 2022-01-20@polygon_main
+| Name | Interfaces | polygon_main |
+| ---- | ---- | ---- |
+| dcu | IERC20 | 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF |
+| fortGovernance | IFortGovernance | 0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8 |
+
 ### 2021-11-27@bsc_main
 | Name | Interfaces | bsc_main |
 | ---- | ---- | ---- |

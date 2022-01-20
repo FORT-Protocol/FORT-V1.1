@@ -2,11 +2,6 @@
 
 pragma solidity ^0.8.6;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-import "./libs/TransferHelper.sol";
-
-import "./interfaces/IFortDAO.sol";
 import "./interfaces/IFortGovernance.sol";
 
 /// @dev Base contract of Fort

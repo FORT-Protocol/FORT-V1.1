@@ -21,12 +21,12 @@ describe('FortOptions', function() {
 
         console.log('ok');
 
-        const newFortOptions = await FortOptions.deploy();
-        console.log('newFortOptions: ' + newFortOptions.address);
+        // const newFortOptions = await FortOptions.deploy();
+        // console.log('newFortOptions: ' + newFortOptions.address);
 
-        const newFortFutures = await FortFutures.deploy();
-        console.log('newFortFutures: ' + newFortFutures.address);
-        
+        // const newFortFutures = await FortFutures.deploy();
+        // console.log('newFortFutures: ' + newFortFutures.address);
+
         return;
 
         //await nest.approve(fortSwap.address, toBigInt(100000000));
