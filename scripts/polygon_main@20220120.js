@@ -22,6 +22,8 @@ exports.deploy = async function() {
     
     // dcu: 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF
     // fortGovernance: 0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8
+    
+    // proxyAdmin: 0xB16260599777EFFB17fd2a8fD30c449e5b71C088
 
     //const dcu = await DCU.deploy();
     const dcu = await DCU.attach('0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF');
