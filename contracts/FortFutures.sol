@@ -2,11 +2,6 @@
 
 pragma solidity ^0.8.6;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-import "./libs/TransferHelper.sol";
-import "./libs/ABDKMath64x64.sol";
-
 import "./interfaces/IFortFutures.sol";
 
 import "./custom/ChainParameter.sol";
@@ -479,7 +474,7 @@ contract FortFutures is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
 
     // 将uint转化为uint128，有截断检查
     function _toUInt128(uint value) private pure returns (uint128) {
-        require(value < 0x100000000000000000000000000000000);
+        require(value < 0x100000000000000000000000000000000, "FEO:can't convert to uint128");
         return uint128(value);
     }
 

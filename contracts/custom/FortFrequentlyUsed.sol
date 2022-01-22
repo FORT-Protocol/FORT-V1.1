@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.6;
 
-import "../interfaces/IFortGovernance.sol";
 
 import "../FortBase.sol";
 
@@ -18,6 +17,8 @@ contract FortFrequentlyUsed is FortBase {
     // USDT代币的基数
     uint constant USDT_BASE = 1 ether;
 }
+
+// import "../interfaces/IFortGovernance.sol";
 
 // /// @dev Base contract of Fort
 // contract FortFrequentlyUsed is FortBase {
