@@ -29,7 +29,6 @@ exports.deploy = async function() {
     const dcu = await DCU.attach('0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF');
     console.log('dcu: ' + dcu.address);
 
-    // TODO: 2. 根据DCU的部署情况，观察脚本返回的合约地址是否正确
     // 部署fortGovernance时，需要即时备份openzeeplin的数据文件，以便在得不到正确地址时，可以手动修改
     //const fortGovernance = await upgrades.deployProxy(FortGovernance, ['0x0000000000000000000000000000000000000000'], { initializer: 'initialize' });
     const fortGovernance = await FortGovernance.attach('0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8');

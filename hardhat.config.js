@@ -21,7 +21,7 @@ task("accounts", "Prints the list of accounts", async () => {
  */
 module.exports = {
   solidity: {
-    version: '0.8.10',
+    version: '0.8.11',
     settings: {
       optimizer: {
         enabled: true,
@@ -83,7 +83,7 @@ module.exports = {
     polygon_main: {
       url: "https://matic-mainnet.chainstacklabs.com",
       chainId: 137,
-      initialBaseFeePerGas: 50e9,
+      gasPrice: 50e9,
       gas: 6000000,
       accounts: [config.account.polygon_main.key, config.account.polygon_main.userA, config.account.polygon_main.userB],
       timeout: 2000000000

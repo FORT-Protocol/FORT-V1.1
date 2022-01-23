@@ -23,7 +23,8 @@ exports.deploy = async function() {
     // dcu: 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF
     // nestPriceFacade: 0x09CE0e021195BA2c1CDE62A8B187abf810951540
     // fortGovernance: 0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8
-    
+    // fortOptions: 0x01ffb51Da9bf237fC6dDB7940dd7Edc859dBFE82
+    // fortFutures: 0x284935F8C571d054Df98eDA8503ea13cde5fd8Cc
     // proxyAdmin: 0xB16260599777EFFB17fd2a8fD30c449e5b71C088
 
     // 1. 部署依赖合约
@@ -40,12 +41,12 @@ exports.deploy = async function() {
     const fortGovernance = await FortGovernance.attach('0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8');
     console.log('fortGovernance: ' + fortGovernance.address);
 
-    const fortOptions = await upgrades.deployProxy(FortOptions, [fortGovernance.address], { initializer: 'initialize' });
-    //const fortOptions = await FortOptions.attach('0x0000000000000000000000000000000000000000');
+    //const fortOptions = await upgrades.deployProxy(FortOptions, [fortGovernance.address], { initializer: 'initialize' });
+    const fortOptions = await FortOptions.attach('0x01ffb51Da9bf237fC6dDB7940dd7Edc859dBFE82');
     console.log('fortOptions: ' + fortOptions.address);
 
-    const fortFutures = await upgrades.deployProxy(FortFutures, [fortGovernance.address], { initializer: 'initialize' });
-    //const fortFutures = await FortFutures.attach('0x0000000000000000000000000000000000000000');
+    //const fortFutures = await upgrades.deployProxy(FortFutures, [fortGovernance.address], { initializer: 'initialize' });
+    const fortFutures = await FortFutures.attach('0x284935F8C571d054Df98eDA8503ea13cde5fd8Cc');
     console.log('fortFutures: ' + fortFutures.address);
 
     console.log('2. fortGovernance.setBuiltinAddress()');
@@ -58,22 +59,41 @@ exports.deploy = async function() {
         nestPriceFacade.address
     );
 
-    console.log('9. dcu.setMinter(fortOptions.address, 3)');
-    await dcu.setMinter(fortOptions.address, 3);
-    console.log('10. dcu.setMinter(fortFutures.address, 3)');
-    await dcu.setMinter(fortFutures.address, 3);
+    // console.log('9. dcu.setMinter(fortOptions.address, 3)');
+    // await dcu.setMinter(fortOptions.address, 3, { nonce: 11 });
+    // console.log('10. dcu.setMinter(fortFutures.address, 3)');
+    // await dcu.setMinter(fortFutures.address, 3, { nonce: 12 });
 
-    console.log('8.2 create lever');
-    await fortFutures.create(eth.address, 1, true);
-    await fortFutures.create(eth.address, 2, true);
-    await fortFutures.create(eth.address, 3, true);
-    await fortFutures.create(eth.address, 4, true);
-    await fortFutures.create(eth.address, 5, true);
-    await fortFutures.create(eth.address, 1, false);
-    await fortFutures.create(eth.address, 2, false);
-    await fortFutures.create(eth.address, 3, false);
-    await fortFutures.create(eth.address, 4, false);
-    await fortFutures.create(eth.address, 5, false);
+    // console.log('8.2 create lever');
+    // console.log('9.1 create(eth.address, 1, true)');
+    // await fortFutures.create(eth.address, 1, true, { nonce: 13 });
+    
+    // console.log('9.2 create(eth.address, 2, true)');
+    // await fortFutures.create(eth.address, 2, true, { nonce: 14 });
+    
+    // console.log('9.3 create(eth.address, 3, true)');
+    // await fortFutures.create(eth.address, 3, true, { nonce: 15 });
+    
+    // console.log('9.4 create(eth.address, 4, true)');
+    // await fortFutures.create(eth.address, 4, true, { nonce: 16 });
+    
+    // console.log('9.5 create(eth.address, 5, true)');
+    // await fortFutures.create(eth.address, 5, true, { nonce: 17 });
+    
+    // console.log('9.6 create(eth.address, 1, false)');
+    // await fortFutures.create(eth.address, 1, false, { nonce: 18 });
+    
+    // console.log('9.7 create(eth.address, 2, false)');
+    // await fortFutures.create(eth.address, 2, false, { nonce: 19 });
+    
+    // console.log('9.8 create(eth.address, 3, false)');
+    // await fortFutures.create(eth.address, 3, false, { nonce: 20 });
+    
+    // console.log('9.9 create(eth.address, 4, false)');
+    // await fortFutures.create(eth.address, 4, false, { nonce: 21 });
+    
+    // console.log('9.10 create(eth.address, 5, false)');
+    // await fortFutures.create(eth.address, 5, false, { nonce: 22 });
 
     console.log('---------- OK ----------');
     
@@ -83,8 +103,6 @@ exports.deploy = async function() {
 
     const contracts = {
         eth: eth,
-        usdt: usdt,
-        hbtc: hbtc,
 
         fortGovernance: fortGovernance,
         dcu: dcu,

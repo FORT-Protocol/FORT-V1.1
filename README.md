@@ -7,6 +7,9 @@
 | ---- | ---- | ---- |
 | dcu | IERC20 | 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF |
 | fortGovernance | IFortGovernance | 0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8 |
+| nestPriceFacade | INestBatchPrice | 0x09CE0e021195BA2c1CDE62A8B187abf810951540 |
+| fortOptions | IFortOptions | 0x01ffb51Da9bf237fC6dDB7940dd7Edc859dBFE82 |
+| fortFutures | IFortFutures | 0x284935F8C571d054Df98eDA8503ea13cde5fd8Cc |
 
 ### 2021-11-27@bsc_main
 | Name | Interfaces | bsc_main |
