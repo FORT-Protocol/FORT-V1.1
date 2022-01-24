@@ -206,7 +206,6 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
         require(exerciseBlock > block.number + MIN_PERIOD, "FEO:exerciseBlock too small");
 
         // 1. 计算期权价格
-        // 按照平均每14秒出一个块计算
         uint v = calcV(
             tokenAddress, 
             oraclePrice,
@@ -306,7 +305,6 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
         uint oraclePrice = _latestPrice(tokenAddress, msg.value, msg.sender);
 
         // 4. 分情况计算当前情况下的期权价格
-        // 按照平均每14秒出一个块计算
         uint dcuAmount = amount * calcV(
             tokenAddress, 
             oraclePrice,
@@ -336,9 +334,7 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
         uint exerciseBlock
     ) public view override returns (uint v) {
 
-        //require(tokenAddress== address(0), "FEO:not allowed");
-
-        // 按照平均每14秒出一个块计算
+        // 按照对应链上的出块时间折算
         uint T = (exerciseBlock - block.number) * BLOCK_TIME / 1000;
         v = orientation 
             ? _calcVc(oraclePrice, T, strikePrice) 
