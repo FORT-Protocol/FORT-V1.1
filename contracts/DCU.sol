@@ -9,6 +9,12 @@ import "./FortBase.sol";
 /// @dev DCU代币
 contract DCU is FortBase, ERC20("Decentralized Currency Unit", "DCU") {
 
+    /// @dev 挖矿权限变更事件
+    /// @param account 目标地址
+    /// @param oldFlag 旧标记
+    /// @param newFlag 新标记
+    event MinterChanged(address account, uint oldFlag, uint newFlag);
+
     // 保存地址权限标记。第一位表示mint权限，第二位表示burn权限
     mapping(address=>uint) _flags;
 
@@ -19,6 +25,7 @@ contract DCU is FortBase, ERC20("Decentralized Currency Unit", "DCU") {
     /// @param account 目标账号
     /// @param flag 挖矿权限标记，第一位表示mint权限，第二位表示burn权限
     function setMinter(address account, uint flag) external onlyGovernance {
+        emit MinterChanged(account, _flags[account], flag);
         _flags[account] = flag;
     }
 

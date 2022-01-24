@@ -9,6 +9,15 @@ import "./FortMapping.sol";
 /// @dev Fort governance contract
 contract FortGovernance is FortMapping, IFortGovernance {
 
+    /// @dev Structure of governance address information
+    struct GovernanceInfo {
+        address addr;
+        uint96 flag;
+    }
+
+    /// @dev Governance address information
+    mapping(address=>GovernanceInfo) _governanceMapping;
+
     /// @dev To support open-zeppelin/upgrades
     /// @param governance IFortGovernance implementation contract address
     function initialize(address governance) public override {
@@ -24,15 +33,6 @@ contract FortGovernance is FortMapping, IFortGovernance {
         _governanceMapping[msg.sender] = GovernanceInfo(msg.sender, uint96(0xFFFFFFFFFFFFFFFFFFFFFFFF));
     }
 
-    /// @dev Structure of governance address information
-    struct GovernanceInfo {
-        address addr;
-        uint96 flag;
-    }
-
-    /// @dev Governance address information
-    mapping(address=>GovernanceInfo) _governanceMapping;
-
     /// @dev Set governance authority
     /// @param addr Destination address
     /// @param flag Weight. 0 means to delete the governance permission of the target address. Weight is not 
@@ -40,6 +40,7 @@ contract FortGovernance is FortMapping, IFortGovernance {
     ///        Here, a uint96 is used to represent the weight, which is only reserved for expansion
     function setGovernance(address addr, uint flag) external override onlyGovernance {
         
+        emit FlagChanged(addr, _governanceMapping[addr].flag, flag);
         if (flag > 0) {
             _governanceMapping[addr] = GovernanceInfo(addr, uint96(flag));
         } else {

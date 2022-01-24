@@ -7,6 +7,11 @@ import "./interfaces/IFortGovernance.sol";
 /// @dev Base contract of Fort
 contract FortBase {
 
+    /// @dev 治理权限变更事件
+    /// @param oldGovernance 旧治理地址
+    /// @param newGovernance 新治理地址
+    event GovernanceChanged(address oldGovernance, address newGovernance);
+
     /// @dev IFortGovernance implementation contract address
     address public _governance;
 
@@ -14,6 +19,7 @@ contract FortBase {
     /// @param governance IFortGovernance implementation contract address
     function initialize(address governance) public virtual {
         require(_governance == address(0), "Fort:!initialize");
+        emit GovernanceChanged(address(0), governance);
         _governance = governance;
     }
 
@@ -24,6 +30,7 @@ contract FortBase {
 
         address governance = _governance;
         require(governance == msg.sender || IFortGovernance(governance).checkGovernance(msg.sender, 0), "Fort:!gov");
+        emit GovernanceChanged(governance, newGovernance);
         _governance = newGovernance;
     }
 
