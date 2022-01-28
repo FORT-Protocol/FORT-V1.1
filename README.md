@@ -14,9 +14,9 @@ A DeFi Development and Application System with Unlimited Liquidity.
 
 ## Documents
 
-**[FORT-V1.1 Contract Specification](docs/readme.md)**
+**[FORT-V1.1 Contract Specification](docs/IHedgeOptions.md)**
 
-**[FORT-V1.1 Contract Structure Diagram](docs/structures.svg)**
+**[FORT-V1.1 Contract Structure Diagram](docs/structure.svg)**
 
 **[Audit Report](https://www.certik.com/projects/fort)**
 
