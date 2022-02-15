@@ -34,7 +34,7 @@ describe('FortOptions', function() {
         console.log();
 
         await fortOptions.sell(fot.index, await fortOptions.balanceOf(fot.index, owner.address), { value: toBigInt(0.01) });
-        console.log('卖出后');
+        console.log('After sell');
         console.log('owner: ' + toDecimal(await dcu.balanceOf(owner.address)) + 'dcu');
         console.log('owner: ' + toDecimal(await fortOptions.balanceOf(fot.index, owner.address)) + '(fot)');
     });

@@ -14,7 +14,7 @@ contract FortFrequentlyUsed is FortBase {
     // Address of NestOpenPrice contract
     address constant NEST_OPEN_PRICE = 0x09CE0e021195BA2c1CDE62A8B187abf810951540;
     
-    // USDT代币的基数
+    // USDT base
     uint constant USDT_BASE = 1 ether;
 }
 
@@ -31,7 +31,7 @@ contract FortFrequentlyUsed is FortBase {
 //     //address constant NEST_OPEN_PRICE = 0xB5D2890c061c321A5B6A4a4254bb1522425BAF0A;
 //     address NEST_OPEN_PRICE;
 
-//     // USDT代币的基数
+//     // USDT base
 //     uint constant USDT_BASE = 1 ether;
 
 //     /// @dev Rewritten in the implementation contract, for load other contract addresses. Call 

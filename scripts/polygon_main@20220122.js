@@ -18,7 +18,7 @@ exports.deploy = async function() {
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
     //const FortSwap = await ethers.getContractFactory('FortSwap');
 
-    console.log('** 开始部署合约 polygon_main@20220122.js **');
+    console.log('**  Deploy: polygon_main@20220122.js **');
     
     // dcu: 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF
     // nestPriceFacade: 0x09CE0e021195BA2c1CDE62A8B187abf810951540
@@ -26,8 +26,6 @@ exports.deploy = async function() {
     // fortOptions: 0x01ffb51Da9bf237fC6dDB7940dd7Edc859dBFE82
     // fortFutures: 0x284935F8C571d054Df98eDA8503ea13cde5fd8Cc
     // proxyAdmin: 0xB16260599777EFFB17fd2a8fD30c449e5b71C088
-
-    // 1. 部署依赖合约
 
     //const dcu = await DCU.deploy();
     const dcu = await DCU.attach('0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF');

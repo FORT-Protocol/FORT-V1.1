@@ -17,7 +17,7 @@ exports.deploy = async function() {
     const FortFutures = await ethers.getContractFactory('FortFutures');
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
 
-    console.log('** 开始部署合约 part1-mainnet@20211013.js **');
+    console.log('**  Deploy: part1-mainnet@20211013.js **');
     
     // dcu: 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF
     //const dcu = await DCU.deploy({ nonce: 0 });

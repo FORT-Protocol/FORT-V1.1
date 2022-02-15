@@ -18,7 +18,7 @@ exports.deploy = async function() {
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
     const FortSwap = await ethers.getContractFactory('FortSwap');
 
-    console.log('** 开始部署合约 mumbai@20210111.js **');
+    console.log('**  Deploy: mumbai@20210111.js **');
     
     // nest: 0x58694D405C8Cd917880FC1E23729fc0B90B7732c
     // usdt: 0xd32502b39da054dfF448AaBc1cb8210C756535f6
@@ -37,7 +37,6 @@ exports.deploy = async function() {
     // fortSwap: 0x82502A8f52BF186907BD0E12c8cEe612b4C203d1
     // proxyAdmin: 0x48f62fe14722455C5519303C2Eb89046107a3fD1
 
-    // 1. 部署依赖合约
     const nest = await TestERC20.attach('0x58694D405C8Cd917880FC1E23729fc0B90B7732c');
     console.log('nest: ' + nest.address);
 
