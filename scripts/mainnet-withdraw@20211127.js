@@ -19,18 +19,18 @@ exports.deploy = async function() {
     const HedgeSwapWithdraw = await ethers.getContractFactory('HedgeSwapWithdraw');
     const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
 
-    console.log('** 开始部署合约 mainnet-withdraw@20211127.js **');
+    console.log('** Deploy: mainnet-withdraw@20211127.js **');
     
-    // nest     0x04abEdA201850aC0124161F037Efd70c74ddC74C  一月    2000000
-    // nhbtc    0x1F832091fAf289Ed4f50FE7418cFbD2611225d46  一月    500000
-    // cofi     0x1a23a6BfBAdB59fa563008c0fB7cf96dfCF34Ea1  一月    500000
-    // pusd     0xCCEcC702Ec67309Bc3DDAF6a42E9e5a6b8Da58f0  一月    500000
+    // nest     0x04abEdA201850aC0124161F037Efd70c74ddC74C  One months    2000000
+    // nhbtc    0x1F832091fAf289Ed4f50FE7418cFbD2611225d46  One months    500000
+    // cofi     0x1a23a6BfBAdB59fa563008c0fB7cf96dfCF34Ea1  One months    500000
+    // pusd     0xCCEcC702Ec67309Bc3DDAF6a42E9e5a6b8Da58f0  One months    500000
     // fortube  0x1FCdcE58959f536621d76f5b7FfB955baa5A672F  ----    0
-    // nest     0x04abEdA201850aC0124161F037Efd70c74ddC74C  两年    36000000
-    // peth     0x53f878Fb7Ec7B86e4F9a0CB1E9a6c89C0555FbbD  一月    500000
+    // nest     0x04abEdA201850aC0124161F037Efd70c74ddC74C  Two years     36000000
+    // peth     0x53f878Fb7Ec7B86e4F9a0CB1E9a6c89C0555FbbD  One months    500000
     // 2021-10-14 12:02
 
-    // ** 开始部署合约 part3-mainnet@20211020.js **
+    // ** Deploy: part3-mainnet@20211020.js **
     // nest: 0x04abEdA201850aC0124161F037Efd70c74ddC74C
     // nhbtc: 0x1F832091fAf289Ed4f50FE7418cFbD2611225d46
     // cofi: 0x1a23a6BfBAdB59fa563008c0fB7cf96dfCF34Ea1
@@ -70,7 +70,6 @@ exports.deploy = async function() {
     const peth = await TestERC20.attach('0x53f878Fb7Ec7B86e4F9a0CB1E9a6c89C0555FbbD');
     console.log('peth: ' + peth.address);
 
-    // 1. 部署依赖合约
     // //const usdt = await TestERC20.deploy('USDT', 'USDT', 6);
     // const usdt = await TestERC20.attach('0xdAC17F958D2ee523a2206206994597C13D831ec7');
     // console.log('usdt: ' + usdt.address);
@@ -111,20 +110,11 @@ exports.deploy = async function() {
     const hedgeSwap = await HedgeSwap.attach('0x6e7fd4BA02A5a7a75Ea3CcE37e221dC144D606Dd');
     console.log('hedgeSwap: ' + hedgeSwap.address);
 
-    // // 1. 先部署取出合约
-    // // 由于取出合约只运行一次，因此可以将runs优化改为1再部署，以节省gas消耗
     // const hedgeSwapWithdraw = await HedgeSwapWithdraw.deploy();
     // console.log('hedgeSwapWithdraw: ' + hedgeSwapWithdraw.address);
     
-    // 2. 再部署新的swap合约
-    // 部署swap合约时，需要将runs改为888888
     // const newHedgeSwap = await HedgeSwap.deploy();
     // console.log('newHedgeSwap: ' + await newHedgeSwap.address);
-
-    // 3. 两个合约部署好后，先将hedgeSwap合约的实现合约改为hedgeSwapWithdraw，然后执行withdraw取出nest和dcu
-    // 取出后，再将hedgeSwap的实现合约改为newHedgeSwap
-
-    // 4. nest和dcu跨链到bsc
 
     console.log('---------- OK ----------');
     

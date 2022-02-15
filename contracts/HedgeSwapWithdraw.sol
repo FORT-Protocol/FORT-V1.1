@@ -8,19 +8,19 @@ import "./libs/TransferHelper.sol";
 
 import "./HedgeFrequentlyUsed.sol";
 
-/// @dev DCU分发合约取出合约
+/// @dev This contract is for withdraw from HedgeSwap pool
 contract HedgeSwapWithdraw is HedgeFrequentlyUsed {
 
-    // NEST代币地址
+    // NEST token address
     address constant NEST_TOKEN_ADDRESS = 0x04abEdA201850aC0124161F037Efd70c74ddC74C;
 
-    // K值，初始化存入1500万nest，同时增发1500万dcu到资金池
+    // K value, 15000000 nest and 15000000 dcu
     uint constant K = 15000000 ether * 15000000 ether;
 
     constructor() {
     }
 
-    /// @dev 从资金池等比例取出一半资金，用于跨链到BSC
+    /// @dev Withdraw half of the funds from the fund pool and other proportions for cross to BSC chain
     function withdraw() external onlyGovernance {
         uint balance0 = IERC20(NEST_TOKEN_ADDRESS).balanceOf(address(this));
         uint balance1 = IERC20( DCU_TOKEN_ADDRESS).balanceOf(address(this));
