@@ -249,7 +249,7 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
 
         // 1. Load the option
         Option storage option = _options[index];
-        //address tokenAddress = address(0);// option.tokenAddress;
+        address owner = _accounts[uint(option.owner)];
         uint strikePrice = _decodeFloat(option.strikePrice);
         bool orientation = option.orientation;
         uint exerciseBlock = uint(option.exerciseBlock);
@@ -281,24 +281,25 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
 
         // 5. If win, mint DCU to user
         if (gain > 0) {
-            DCU(DCU_TOKEN_ADDRESS).mint(msg.sender, gain);
+            DCU(DCU_TOKEN_ADDRESS).mint(owner, gain);
         }
 
         // emit Exercise event
-        emit Exercise(index, amount, msg.sender, gain);
+        emit Exercise(index, amount, owner, gain);
     }
 
     /// @dev Sell option
     /// @param index Index of option
     /// @param amount Amount of option to sell
     function sell(uint index, uint amount) external payable override {
-        // Sell formula: vt=Max(ct(T,K)*0.975，0). 
+        // Sell formula: vt=Max(ct(T,K)*0.95, 0). 
         // ct(K,T) Is the price of option present
         // Note: No less than 1% condition
 
         // 1. Load the option
         Option storage option = _options[index];
-        address tokenAddress = address(0); //option.tokenAddress;
+        address owner = _accounts[uint(option.owner)];
+        require(owner == msg.sender, "FO:not owner");
         uint strikePrice = _decodeFloat(option.strikePrice);
         bool orientation = option.orientation;
         uint exerciseBlock = uint(option.exerciseBlock);
@@ -307,17 +308,18 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
         option.balance = _toUInt128(uint(option.balance) - amount);
 
         // 3. Query price from oracle
-        uint oraclePrice = _latestPrice(tokenAddress, msg.value, msg.sender);
+        uint oraclePrice = _latestPrice(address(0), msg.value, msg.sender);
 
         // 4. Calculate option price
         uint dcuAmount = amount * calcV(
-            tokenAddress, 
+            address(0), 
             oraclePrice,
             strikePrice,
             orientation,
             exerciseBlock
         ) * SELL_RATE / (USDT_BASE * 0x27100000000000000000); 
         //(USDT_BASE * 10000 << 64);
+
         if (dcuAmount > 0) {
             DCU(DCU_TOKEN_ADDRESS).mint(msg.sender, dcuAmount);
         }
@@ -421,8 +423,8 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
             /* */ 0x807E7F7F7E7D7D797C737B6A7A5F79517841772F761A750373E972CD71AF708E, //
             /* */ 0x8F2A8E518D768C998BB98AD789F2890B88218736864785568463836E8276817B, //
             /* */ 0x9B749AC19A0B9953989997DD971E965D959A94D4940C9342927591A690D49000, //
-            /* */ 0xA57CA4ECA459A3C4A32EA295A1FAA15CA0BDA01C9F789ED29E2A9D809CD39C25, //
-            ///// 0xA57CA4ECA459A3C4A32EA295A1FAA15DA0BDA01C9F789ED29E2A9D809CD39C25, //
+            ///// 0xA57CA4ECA459A3C4A32EA295A1FAA15CA0BDA01C9F789ED29E2A9D809CD39C25, //
+            /* */ 0xA57CA4ECA459A3C4A32EA295A1FAA15DA0BDA01C9F789ED29E2A9D809CD39C25, //
             /* */ 0xAD78AD07AC93AC1EABA7AB2EAAB3AA36A9B8A937A8B5A830A7AAA721A697A60B, //
             /* */ 0xB3AAB353B2FAB2A0B245B1E7B189B128B0C6B062AFFDAF96AF2DAEC2AE56ADE8, //
             /* */ 0xB859B818B7D6B793B74EB708B6C0B678B62EB5E2B595B547B4F7B4A6B454B400, //
@@ -515,7 +517,7 @@ contract FortOptions is ChainParameter, CommonParameter, FortFrequentlyUsed, Nes
         vp = left > right ? left - right : 0;
     }
 
-    // d1 in formula，Because didn't divide by σ, So it's named D1
+    // d1 in formula, Because didn't divide by σ, So it's named D1
     function _D1(uint S0, uint K, int128 sigmaSQ_T, int128 miu_T) private pure returns (int128) {
 
         //require(K < 0x1000000000000000000000000000000000000000000000000, "FEO:K can't ROL 64bits");
