@@ -47,15 +47,15 @@ exports.deploy = async function() {
     const fortFutures = await FortFutures.attach('0x284935F8C571d054Df98eDA8503ea13cde5fd8Cc');
     console.log('fortFutures: ' + fortFutures.address);
 
-    console.log('2. fortGovernance.setBuiltinAddress()');
-    await fortGovernance.setBuiltinAddress(
-        dcu.address,
-        '0x0000000000000000000000000000000000000000',
-        fortOptions.address,
-        fortFutures.address,
-        '0x0000000000000000000000000000000000000000',
-        nestPriceFacade.address
-    );
+    // console.log('2. fortGovernance.setBuiltinAddress()');
+    // await fortGovernance.setBuiltinAddress(
+    //     dcu.address,
+    //     '0x0000000000000000000000000000000000000000',
+    //     fortOptions.address,
+    //     fortFutures.address,
+    //     '0x0000000000000000000000000000000000000000',
+    //     nestPriceFacade.address
+    // );
 
     // console.log('9. dcu.setMinter(fortOptions.address, 3)');
     // await dcu.setMinter(fortOptions.address, 3, { nonce: 11 });
