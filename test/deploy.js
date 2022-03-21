@@ -3,7 +3,7 @@ const { deploy } = require('../scripts/deploy.js');
 const { toBigInt, toDecimal, showReceipt, snd, tableSnd, d1, Vc, Vp } = require('./utils.js');
 const { ethers, upgrades } = require('hardhat');
 
-describe('HedgeOptions', function() {
+describe('FortOptions', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
         const FortOptions = await ethers.getContractFactory('FortOptions');
@@ -15,9 +15,9 @@ describe('HedgeOptions', function() {
             pusd,
             peth,
 
-            hedgeGovernance,
-            hedgeOptions, hedgeFutures,
-            nestPriceFacade, hedgeSwap
+            fortGovernance,
+            fortOptions, fortFutures,
+            nestPriceFacade, fortSwap
         } = await deploy();
 
         console.log('ok');

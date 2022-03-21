@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.6;
 
-import "./HedgeFrequentlyUsed.sol";
+import "./FortFrequentlyUsed.sol";
 
 import "../interfaces/INestOpenPrice.sol";
 
-/// @dev Base contract of Hedge
-contract NestPriceAdapter is HedgeFrequentlyUsed {
+/// @dev Base contract of Fort
+contract NestPriceAdapter is FortFrequentlyUsed {
 
     // ETH/USDT price channel id
     uint constant ETH_USDT_CHANNEL_ID = 0;

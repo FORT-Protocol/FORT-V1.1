@@ -2,11 +2,11 @@
 // const { deploy } = require('../scripts/deploy.js');
 // const { toBigInt, toDecimal, showReceipt, snd, tableSnd, d1, Vc, Vp } = require('./utils.js');
 
-// describe('HedgeSwap', function() {
+// describe('FortSwap', function() {
 //     it('First', async function() {
 //         var [owner, addr1, addr2] = await ethers.getSigners();
         
-//         const { eth, usdt, hbtc, dcu, hedgeOptions, hedgeFutures, nestPriceFacade, hedgeSwap } = await deploy();
+//         const { eth, usdt, hbtc, dcu, fortOptions, fortFutures, nestPriceFacade, fortSwap } = await deploy();
 //         const TestERC20 = await ethers.getContractFactory('TestERC20');
 //         const nest = await TestERC20.deploy('NEST', 'NEST', 18);
 
@@ -27,28 +27,28 @@
 //                 height: await ethers.provider.getBlockNumber(),
 //                 owner: await getAccountInfo(owner),
 //                 addr1: await getAccountInfo(addr1),
-//                 hedgeSwap: await getAccountInfo(hedgeSwap),
+//                 fortSwap: await getAccountInfo(fortSwap),
 //             };
 //         }
 
-//         await dcu.setMinter(hedgeSwap.address, 1);
+//         await dcu.setMinter(fortSwap.address, 1);
 //         await nest.transfer(owner.address, toBigInt(100000000));
         
-//         await hedgeSwap.setNestTokenAddress(nest.address);
-//         await nest.approve(hedgeSwap.address, toBigInt(300000000));
-//         //await dcu.approve(hedgeSwap.address, toBigInt(300000000));
+//         await fortSwap.setNestTokenAddress(nest.address);
+//         await nest.approve(fortSwap.address, toBigInt(300000000));
+//         //await dcu.approve(fortSwap.address, toBigInt(300000000));
 //         if (true) {
 //             console.log('1. deposit');
-//             await hedgeSwap.deposit(toBigInt(14999999));
-//             await hedgeSwap.deposit(toBigInt(1));
+//             await fortSwap.deposit(toBigInt(14999999));
+//             await fortSwap.deposit(toBigInt(1));
 //             console.log(await getStatus());
 //         }
 
 //         if (true) {
 //             console.log('2. Swap 4000000 dcu for nest');
-//             await dcu.transfer(hedgeSwap.address, toBigInt(1000000));
+//             await dcu.transfer(fortSwap.address, toBigInt(1000000));
 //             console.log(await getStatus());
-//             let receipt = await hedgeSwap.swapForDCU(toBigInt(10));
+//             let receipt = await fortSwap.swapForDCU(toBigInt(10));
 //             await showReceipt(receipt);
 //             console.log(await getStatus());
 //         }

@@ -8,17 +8,17 @@ import "./libs/TransferHelper.sol";
 
 import "./interfaces/IFortSwap.sol";
 
-import "./custom/HedgeFrequentlyUsed.sol";
+import "./custom/FortFrequentlyUsed.sol";
 
 /// @dev Swap dcu with token
-contract FortSwapWithdraw is HedgeFrequentlyUsed {
+contract FortSwapWithdraw is FortFrequentlyUsed {
 
     address constant FORT_DAO_ADDRESS = address(0);
 
     // Target token address
     address constant TOKEN_ADDRESS = 0x55d398326f99059fF775485246999027B3197955;
 
-    // K value, according to schedule, sell out nest from HedgeSwap pool on ethereum mainnet,
+    // K value, according to schedule, sell out nest from FortSwap pool on ethereum mainnet,
     // Exchange to usdt, and cross to BSC smart chain. Excluding exchange and cross chain consumption, 
     // a total of 952297.70usdt was obtained, address: 0x2bE88070a330Ef106E0ef77A45bd1F583BFcCf4E.
     // 77027.78usdt transferred to 0xc5229c9e1cbe1888b23015d283413a9c5e353ac7 as project expenditure.

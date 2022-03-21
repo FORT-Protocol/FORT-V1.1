@@ -1,7 +1,7 @@
-# IHedgeSwap
+# IFortSwap
 
 ## 1. Interface Description
-    Defines methods for HedgeSwap
+    Defines methods for FortSwap
 
 ## 2. Method Description
 

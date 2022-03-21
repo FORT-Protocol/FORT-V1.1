@@ -4,10 +4,10 @@ pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import "./HedgeBase.sol";
+import "./FortBase.sol";
 
 /// @dev DCU token
-contract DCU is HedgeBase, ERC20("Decentralized Currency Unit", "DCU") {
+contract DCU is FortBase, ERC20("Decentralized Currency Unit", "DCU") {
 
     /// @dev Mining permission flag change event
     /// @param account Target address
@@ -16,43 +16,39 @@ contract DCU is HedgeBase, ERC20("Decentralized Currency Unit", "DCU") {
     event MinterChanged(address account, uint oldFlag, uint newFlag);
 
     // Flags for account
-    mapping(address=>uint) _minters;
+    mapping(address=>uint) _flags;
 
     constructor() {
-    }
-
-    modifier onlyMinter {
-        require(_minters[msg.sender] == 1, "DCU:not minter");
-        _;
     }
 
     /// @dev Set mining permission flag
     /// @param account Target address
     /// @param flag Mining permission flag
     function setMinter(address account, uint flag) external onlyGovernance {
-
-        emit MinterChanged(account, _minters[account], flag);
-        _minters[account] = flag;
+        emit MinterChanged(account, _flags[account], flag);
+        _flags[account] = flag;
     }
 
     /// @dev Check mining permission flag
     /// @param account Target address
     /// @return flag Mining permission flag
     function checkMinter(address account) external view returns (uint) {
-        return _minters[account];
+        return _flags[account];
     }
 
     /// @dev Mint DCU
     /// @param to Target address
     /// @param value Mint amount
-    function mint(address to, uint value) external onlyMinter {
+    function mint(address to, uint value) external {
+        require(_flags[msg.sender] & 0x01 == 0x01, "DCU:!mint");
         _mint(to, value);
     }
 
     /// @dev Burn DCU
     /// @param from Target address
     /// @param value Burn amount
-    function burn(address from, uint value) external onlyMinter {
+    function burn(address from, uint value) external {
+        require(_flags[msg.sender] & 0x02 == 0x02, "DCU:!burn");
         _burn(from, value);
     }
 }

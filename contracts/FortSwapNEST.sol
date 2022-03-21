@@ -6,14 +6,14 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./libs/TransferHelper.sol";
 
-import "./interfaces/IHedgeSwap.sol";
+import "./interfaces/IFortSwapNEST.sol";
 
-import "./custom/HedgeFrequentlyUsed.sol";
+import "./custom/FortFrequentlyUsed.sol";
 
 import "./DCU.sol";
 
 /// @dev Swap DCU with NEST
-contract HedgeSwap is HedgeFrequentlyUsed, IHedgeSwap {
+contract FortSwapNEST is FortFrequentlyUsed, IFortSwapNEST {
 
     // NEST token address
     address constant NEST_TOKEN_ADDRESS = 0x98f8669F6481EbB341B522fCD3663f79A3d1A6A7;
