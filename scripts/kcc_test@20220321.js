@@ -85,24 +85,24 @@ exports.deploy = async function() {
     // console.log('1. dcu.initialize(fortGovernance.address)');
     // await dcu.initialize(fortGovernance.address);
 
-    // console.log('2. fortGovernance.setBuiltinAddress()');
-    // await fortGovernance.setBuiltinAddress(
-    //     dcu.address,
-    //     fortDAO.address,
-    //     fortOptions.address,
-    //     fortFutures.address,
-    //     '0x0000000000000000000000000000000000000000',
-    //     '0x0000000000000000000000000000000000000000'
-    // );
+    console.log('2. fortGovernance.setBuiltinAddress()');
+    await fortGovernance.setBuiltinAddress(
+        dcu.address,
+        fortDAO.address,
+        fortOptions.address,
+        fortFutures.address,
+        '0x0000000000000000000000000000000000000000',
+        nestPriceFacade.address
+    );
 
     // // console.log('3. dcu.update()');
     // // await dcu.update(fortGovernance.address);
     // // console.log('4. fortDAO.update()');
     // // await fortDAO.update(fortGovernance.address);
-    // console.log('5. fortOptions.update()');
-    // await fortOptions.update(fortGovernance.address);
-    // console.log('6. fortFutures.update()');
-    // await fortFutures.update(fortGovernance.address);
+    console.log('5. fortOptions.update()');
+    await fortOptions.update(fortGovernance.address);
+    console.log('6. fortFutures.update()');
+    await fortFutures.update(fortGovernance.address);
     // console.log('7. fortVaultForStaking.update()');
     // // await fortVaultForStaking.update(fortGovernance.address);
     // // console.log('8. fortVaultForStaking.update()');

@@ -39,16 +39,18 @@ contract DCU is FortBase, ERC20("Decentralized Currency Unit", "DCU") {
     /// @dev Mint DCU
     /// @param to Target address
     /// @param value Mint amount
-    function mint(address to, uint value) external {
+    function mint(address to, uint value) external returns (bool) {
         require(_flags[msg.sender] & 0x01 == 0x01, "DCU:!mint");
         _mint(to, value);
+        return true;
     }
 
     /// @dev Burn DCU
     /// @param from Target address
     /// @param value Burn amount
-    function burn(address from, uint value) external {
+    function burn(address from, uint value) external returns (bool) {
         require(_flags[msg.sender] & 0x02 == 0x02, "DCU:!burn");
         _burn(from, value);
+        return true;
     }
 }

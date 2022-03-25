@@ -21,5 +21,12 @@ describe('FortOptions', function() {
         } = await deploy();
 
         console.log('ok');
+
+        // await fortGovernance.setGovernance('0x688f016CeDD62AD1d8dFA4aBcf3762ab29294489', 1);
+        // await fortGovernance.setGovernance('0xd9f3aA57576a6da995fb4B7e7272b4F16f04e681', 1);
+        // await dcu.setMinter('0x688f016CeDD62AD1d8dFA4aBcf3762ab29294489', 3);
+        //await dcu.setMinter(owner.address, 3);
+
+        //await dcu.mint(owner.address, toBigInt(100000));
     });
 });
