@@ -271,8 +271,7 @@ contract FortOptions is ChainParameter, FortFrequentlyUsed, FortPriceAdapter, IF
 
         TokenConfig memory tokenConfig = _tokenRegistrations[option.tokenIndex].tokenConfig;
 
-        // TODO:
-        //require(block.number >= exerciseBlock, "FEO:at maturity");
+        require(block.number >= exerciseBlock, "FEO:at maturity");
 
         // 2. Deduct the specified amount
         option.balance = _toUInt112(uint(option.balance) - amount);
