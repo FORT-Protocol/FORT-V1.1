@@ -5,6 +5,6 @@
 // Runtime Environment's members available in the global scope.
 //const hre = require('hardhat');
 
-const deploy = require('./deploy.proxy.fort.js');
+const deploy = require('./kcc_main-part2@20220329.js');
 
 exports.deploy = deploy.deploy;

@@ -20,13 +20,21 @@ exports.deploy = async function() {
 
     console.log('** Deploy: kcc_main-part2@20220329.js **');
     
-    // TODO: 确定地址
-    const pbtc = await TestERC20.attach('0x0000000000000000000000000000000000000000');
+    //     ** Deploy: kcc_main-part1@20220328.js **
+    // dcu: 0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF
+    // fortGovernance: 0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8
+    // proxyAdmin: 0xB16260599777EFFB17fd2a8fD30c449e5b71C088
+
+    // PETH:0x6cce8b9da777Ab10B11f4EA8510447431ED6ad1E
+    // PUSD:0x0C4CD7cA70172Af5f4BfCb7b0ACBf6EdFEaFab31
+    // PBTC:0x32D4a9a94537a88118e878c56b93009Af234A6ce
+    // NEST:0x98f8669F6481EbB341B522fCD3663f79A3d1A6A7
+
+    const pbtc = await TestERC20.attach('0x32D4a9a94537a88118e878c56b93009Af234A6ce');
     console.log('pbtc: ' + pbtc.address);
 
-    // TODO: 确定地址
     //const dcu = await DCU.deploy();
-    const dcu = await DCU.attach('0x0000000000000000000000000000000000000000');
+    const dcu = await DCU.attach('0xf56c6eCE0C0d6Fbb9A53282C0DF71dBFaFA933eF');
     console.log('dcu: ' + dcu.address);
 
     // TODO: 确定地址
@@ -34,9 +42,8 @@ exports.deploy = async function() {
     const nestPriceFacade = await NestPriceFacade.attach('0x0000000000000000000000000000000000000000');
     console.log('nestPriceFacade: ' + nestPriceFacade.address);
 
-    // TODO: 确定地址
     //const fortGovernance = await upgrades.deployProxy(FortGovernance, ['0x0000000000000000000000000000000000000000'], { initializer: 'initialize' });
-    const fortGovernance = await FortGovernance.attach('0x0000000000000000000000000000000000000000');
+    const fortGovernance = await FortGovernance.attach('0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8');
     console.log('fortGovernance: ' + fortGovernance.address);
 
     const fortOptions = await upgrades.deployProxy(FortOptions, [fortGovernance.address], { initializer: 'initialize' });
@@ -50,7 +57,7 @@ exports.deploy = async function() {
     console.log('2. fortGovernance.setBuiltinAddress()');
     await fortGovernance.setBuiltinAddress(
         dcu.address,
-        fortDAO.address,
+        '0x0000000000000000000000000000000000000000',
         fortOptions.address,
         fortFutures.address,
         '0x0000000000000000000000000000000000000000',
