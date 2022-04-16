@@ -81,7 +81,7 @@ module.exports = {
       timeout: 2000000000
     },
     kcc_main: {
-      url: "https://rpc-mainnet.kcc.network",
+      url: "http://127.0.0.1:50000/kcc/",
       chainId: 321,
       gasPrice: 1e9,
       gas: 6000000,
