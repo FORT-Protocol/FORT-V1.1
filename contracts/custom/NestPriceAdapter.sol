@@ -2,15 +2,18 @@
 
 pragma solidity ^0.8.6;
 
-import "../interfaces/INestOpenPrice.sol";
-
 import "./HedgeFrequentlyUsed.sol";
+
+import "../interfaces/INestOpenPrice.sol";
 
 /// @dev Base contract of Hedge
 contract NestPriceAdapter is HedgeFrequentlyUsed {
 
-    // ETH/USDT channel id
+    // ETH/USDT price channel id
     uint constant ETH_USDT_CHANNEL_ID = 0;
+
+    // Post unit: 2000usd
+    uint constant POST_UNIT = 2000 * USDT_BASE;
 
     // Query latest 2 price
     function _lastPriceList(address tokenAddress, uint fee, address payback) internal returns (uint[] memory prices) {
@@ -46,6 +49,6 @@ contract NestPriceAdapter is HedgeFrequentlyUsed {
 
     // Convert to usdt based price
     function _toUSDTPrice(uint rawPrice) internal pure returns (uint) {
-        return 2000 ether * 1 ether / rawPrice;
+        return POST_UNIT * 1 ether / rawPrice;
     }
 }

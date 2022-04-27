@@ -37,9 +37,6 @@ contract HedgeOptions is ChainParameter, CommonParameter, HedgeFrequentlyUsed, N
     // Proportion of option selling value, 10000 basis. 9500
     uint constant SELL_RATE = 9500;
 
-    // Minimal exercise block period. 840000
-    uint constant MIN_PERIOD = 840000;
-
     // Option array
     Option[] _options;
 
