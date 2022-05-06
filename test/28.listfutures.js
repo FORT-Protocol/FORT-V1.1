@@ -41,7 +41,7 @@ describe('HedgeOptions', function() {
 
            //const optionCount = await hedgeOptions.getOptionCount();
            //console.log('optionCount: ' + optionCount);
-           const futures = await fortFutures.find(0, 10, 1000, '0xa74abcda97da5e15344c64244c65f4f8c7cbce77');
+           const futures = await fortFutures.find(0, 10, 100000, '0x5fa1dd7f6dce7066d8be8b8787575d66a20dc44c');
 
            for(var i = 0; i < futures.length; ++i) {
                const o = futures[i];
@@ -55,17 +55,6 @@ describe('HedgeOptions', function() {
                    baseBlock: o.baseBlock.toString(),
                }
                console.log(option);
-               
-            //    uint index;
-            //    address tokenAddress;
-            //    uint lever;
-            //    bool orientation;
-               
-            //    uint balance;
-            //    // Base price
-            //    uint basePrice;
-            //    // Base block
-            //    uint baseBlock;
            }
         }
     });

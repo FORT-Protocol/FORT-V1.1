@@ -41,7 +41,7 @@ describe('HedgeOptions', function() {
 
            const optionCount = await fortOptions.getOptionCount();
            console.log('optionCount: ' + optionCount);
-           const options = await fortOptions.list(0, 5, 1);
+           const options = await fortOptions.list(0, optionCount, 1);
 
            for(var i = 0; i < options.length; ++i) {
                const o = options[i];
@@ -54,13 +54,6 @@ describe('HedgeOptions', function() {
                    balance: o.balance.toString()
                }
                console.log(option);
-
-            //    uint index;
-            //    address tokenAddress;
-            //    uint strikePrice;
-            //    bool orientation;
-            //    uint exerciseBlock;
-            //    uint balance;
            }
         }
     });

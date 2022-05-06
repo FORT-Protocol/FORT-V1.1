@@ -16,7 +16,7 @@ exports.deploy = async function() {
     const HedgeOptions = await ethers.getContractFactory('HedgeOptions');
     const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
     const HedgeVaultForStaking = await ethers.getContractFactory('HedgeVaultForStaking');
-    const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
+    // const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
 
     console.log('** Deploy: part4-mainnet@20211026.js **');
     
@@ -105,9 +105,9 @@ exports.deploy = async function() {
     const hedgeVaultForStaking = await HedgeVaultForStaking.attach('0xE3940A3E94bca34B9175d156a5E9C5728dFE922F');
     console.log('hedgeVaultForStaking: ' + hedgeVaultForStaking.address);
 
-    //const hedgeSwap = await upgrades.deployProxy(HedgeSwap, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeSwap = await HedgeSwap.attach('0x6e7fd4BA02A5a7a75Ea3CcE37e221dC144D606Dd');
-    console.log('hedgeSwap: ' + hedgeSwap.address);
+    // //const hedgeSwap = await upgrades.deployProxy(HedgeSwap, [hedgeGovernance.address], { initializer: 'initialize' });
+    // const hedgeSwap = await HedgeSwap.attach('0x6e7fd4BA02A5a7a75Ea3CcE37e221dC144D606Dd');
+    // console.log('hedgeSwap: ' + hedgeSwap.address);
 
     console.log('---------- OK ----------');
     
@@ -123,11 +123,11 @@ exports.deploy = async function() {
         hedgeGovernance: hedgeGovernance,
         dcu: dcu,
         // hedgeDAO: hedgeDAO,
-        // hedgeOptions: hedgeOptions,
-        // hedgeFutures: hedgeFutures,
+        fortOptions: hedgeOptions,
+        fortFutures: hedgeFutures,
         hedgeVaultForStaking: hedgeVaultForStaking,
         nestPriceFacade: nestPriceFacade,
-        hedgeSwap: hedgeSwap
+        //hedgeSwap: hedgeSwap
     };
 
     return contracts;
