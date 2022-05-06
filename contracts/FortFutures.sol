@@ -45,6 +45,9 @@ contract FortFutures is ChainParameter, HedgeFrequentlyUsed, FortPriceAdapter, I
     // Mapping from composite key to future index
     mapping(uint=>uint) _futureMapping;
 
+    // PlaceHolder
+    mapping(address=>uint) _bases;
+
     // Future array
     FutureInfo[] _futures;
 

@@ -6,10 +6,10 @@ pragma solidity ^0.8.6;
 contract ChainParameter {
 
     // Block time. ethereum 14 seconds, BSC 3 seconds, polygon 2.2 seconds
-    uint constant BLOCK_TIME = 3;
+    uint constant BLOCK_TIME = 14;
 
-    // Minimal exercise block period. 840000
-    uint constant MIN_PERIOD = 840000;
+    // Minimal exercise block period. 180000
+    uint constant MIN_PERIOD = 180000;
 
-    uint constant MIN_EXERCISE_BLOCK = 840000;
+    uint constant MIN_EXERCISE_BLOCK = 180000;
 }

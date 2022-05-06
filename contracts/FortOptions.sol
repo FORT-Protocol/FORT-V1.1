@@ -40,7 +40,7 @@ contract FortOptions is ChainParameter, HedgeFrequentlyUsed, FortPriceAdapter, I
     // Proportion of option selling value, 10000 basis. 9500
     uint constant SELL_RATE = 9500;
 
-    uint[3] _oldStoragePlaceHolder;
+    uint[8] _oldStoragePlaceHolder;
 
     // Option array
     Option[] _options;

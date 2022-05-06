@@ -5,8 +5,8 @@ const { toBigInt, toDecimal, showReceipt, snd, tableSnd, d1, Vc, Vp } = require(
 describe('HedgeOptions', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
-        const HedgeOptions = await ethers.getContractFactory('HedgeOptions');
-        const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
+        const FortOptions = await ethers.getContractFactory('FortOptions');
+        const FortFutures = await ethers.getContractFactory('FortFutures');
 
         const { 
             eth, usdt, dcu, 
@@ -21,11 +21,11 @@ describe('HedgeOptions', function() {
 
         console.log('ok');
 
-        // const newHedgeOptions = await HedgeOptions.deploy();
-        // console.log('newHedgeOptions: ' + newHedgeOptions.address);
+        // const newFortFutures = await FortFutures.deploy({nonce:2686});
+        // console.log('newFortFutures: ' + newFortFutures.address);
         
-        const newHedgeFutures = await HedgeFutures.deploy();
-        console.log('newHedgeFutures: ' + newHedgeFutures.address);
+        // const newFortOptions = await FortOptions.deploy({nonce:2687});
+        // console.log('newFortOptions: ' + newFortOptions.address);
 
         return;
 

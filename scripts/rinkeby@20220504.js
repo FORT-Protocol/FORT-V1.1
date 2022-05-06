@@ -13,17 +13,17 @@ exports.deploy = async function() {
     const HedgeGovernance = await ethers.getContractFactory('HedgeGovernance');
     const DCU = await ethers.getContractFactory('DCU');
     const HedgeDAO = await ethers.getContractFactory('HedgeDAO');
-    const HedgeOptions = await ethers.getContractFactory('HedgeOptions');
-    const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
+    const FortOptions = await ethers.getContractFactory('FortOptions');
+    const FortFutures = await ethers.getContractFactory('FortFutures');
     const HedgeVaultForStaking = await ethers.getContractFactory('HedgeVaultForStaking');
 
-    console.log('** Deploy: rinkeby@20211004.js **');
+    console.log('** Deploy: rinkeby@20220504.js **');
         
     //     ** Deploy: rinkeby@20211004.js **
     // usdt: 0x2d750210c0b5343a0b79beff8F054C9add7d2411
     // hbtc: 0xaE73d363Cb4aC97734E07e48B01D0a1FF5D1190B
     // dcu: 0xc408edF487e98bB932eD4A8983038FF19352eDbd
-    // nestPriceFacade: 0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838
+    // nestPriceFacade: 0xc08E6A853241B9a08225EECf93F3b279FA7A1bE7
     // hedgeGovernance: 0xA2B48399a579335eF7D410B9C0B50E59E126C48a
     // hedgeDAO: 0x5769c37289C9dCfe1AD141773a9ED5aA89c2e069
     // hedgeOptions: 0x702F97D4991e2155576548989fEdEE3971705465
@@ -38,7 +38,7 @@ exports.deploy = async function() {
     // usdt: 0x2d750210c0b5343a0b79beff8F054C9add7d2411
     // hbtc: 0xaE73d363Cb4aC97734E07e48B01D0a1FF5D1190B
     // dcu: 0xc408edF487e98bB932eD4A8983038FF19352eDbd
-    // nestPriceFacade: 0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838
+    // nestPriceFacade: 0xc08E6A853241B9a08225EECf93F3b279FA7A1bE7
     // hedgeGovernance: 0xA2B48399a579335eF7D410B9C0B50E59E126C48a
     // hedgeDAO: 0x5769c37289C9dCfe1AD141773a9ED5aA89c2e069
     // hedgeOptions: 0x702F97D4991e2155576548989fEdEE3971705465
@@ -75,7 +75,7 @@ exports.deploy = async function() {
     console.log('dcu: ' + dcu.address);
 
     //const nestPriceFacade = await NestPriceFacade.deploy();
-    const nestPriceFacade = await NestPriceFacade.attach('0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838');
+    const nestPriceFacade = await NestPriceFacade.attach('0xc08E6A853241B9a08225EECf93F3b279FA7A1bE7');
     console.log('nestPriceFacade: ' + nestPriceFacade.address);
 
     //const hedgeGovernance = await upgrades.deployProxy(HedgeGovernance, ['0x0000000000000000000000000000000000000000'], { initializer: 'initialize' });
@@ -87,12 +87,12 @@ exports.deploy = async function() {
     console.log('hedgeDAO: ' + hedgeDAO.address);
 
     //const hedgeOptions = await upgrades.deployProxy(HedgeOptions, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeOptions = await HedgeOptions.attach('0x702F97D4991e2155576548989fEdEE3971705465');
-    console.log('hedgeOptions: ' + hedgeOptions.address);
+    const fortOptions = await FortOptions.attach('0x702F97D4991e2155576548989fEdEE3971705465');
+    console.log('fortOptions: ' + fortOptions.address);
 
     //const hedgeFutures = await upgrades.deployProxy(HedgeFutures, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeFutures = await HedgeFutures.attach('0x3Db207CadA55e556ab7A8534A7a6aD9EFfc27B01');
-    console.log('hedgeFutures: ' + hedgeFutures.address);
+    const fortFutures = await FortFutures.attach('0x3Db207CadA55e556ab7A8534A7a6aD9EFfc27B01');
+    console.log('fortFutures: ' + fortFutures.address);
 
     //const hedgeVaultForStaking = await upgrades.deployProxy(HedgeVaultForStaking, [hedgeGovernance.address], { initializer: 'initialize' });
     const hedgeVaultForStaking = await HedgeVaultForStaking.attach('0x5cA5E616310c0Cca41B7E4329021C17a5a79a0F1');
@@ -110,63 +110,65 @@ exports.deploy = async function() {
     // // await hedgeFutures.initialize(hedgeGovernance.address);
     // // await hedgeVaultForStaking.initialize(hedgeGovernance.address);
 
+    console.log(await hedgeGovernance.getBuiltinAddress());
+
     // console.log('2. hedgeGovernance.setBuiltinAddress()');
     // await hedgeGovernance.setBuiltinAddress(
-    //     dcu.address,
-    //     hedgeDAO.address,
-    //     hedgeOptions.address,
-    //     hedgeFutures.address,
-    //     hedgeVaultForStaking.address,
-    //     nestPriceFacade.address
+    //     '0x0000000000000000000000000000000000000000',
+    //     '0x0000000000000000000000000000000000000000',
+    //     '0x0000000000000000000000000000000000000000',
+    //     '0x0000000000000000000000000000000000000000',
+    //     '0x0000000000000000000000000000000000000000',
+    //     nestPriceFacade.address, {nonce:2674}
     // );
 
-    // console.log('3. dcu.update()');
-    // await dcu.update(hedgeGovernance.address);
-    // console.log('4. hedgeDAO.update()');
-    // await hedgeDAO.update(hedgeGovernance.address);
-    // console.log('5. hedgeOptions.update()');
-    // await hedgeOptions.update(hedgeGovernance.address);
-    // console.log('6. hedgeFutures.update()');
-    // await hedgeFutures.update(hedgeGovernance.address);
-    // console.log('7. hedgeVaultForStaking.update()');
-    // await hedgeVaultForStaking.update(hedgeGovernance.address);
-    // console.log('8. hedgeSwap.update()');
-    // await hedgeSwap.update(hedgeGovernance.address);
+    // console.log('7. fortOptions.register(eth.address)');
+    // await fortOptions.register(eth.address, {
+    //     channelId: 0,
+    //     pairIndex: 1,
+        
+    //     sigmaSQ: 45659142400n,
+    //     miuLong: 64051194700n,
+    //     miuShort: 0n
+    // }, {nonce:2677});
+    // console.log('8. fortOptions.register(pbtc.address)');
+    // await fortOptions.register(hbtc.address, {
+    //     channelId: 0,
+    //     pairIndex: 0,
+        
+    //     sigmaSQ: 31708924900n,
+    //     miuLong: 64051194700n,
+    //     miuShort: 0n
+    // }, {nonce:2678});
 
-    // console.log('8. hedgeOptions.setConfig()');
-    // await hedgeOptions.setConfig(eth.address, { 
-    //     sigmaSQ: '45659142400', 
-    //     miu: '467938556917', 
-    //     minPeriod: 6000 
-    // });
-    // console.log('8.1. hedgeOptions.setConfig()');
-    // await hedgeOptions.setConfig(hbtc.address, { 
-    //     sigmaSQ: '45659142400', 
-    //     miu: '467938556917', 
-    //     minPeriod: 6000 
-    // });
+    // console.log('9. fortFutures.register(eth.address)');
+    // await fortFutures.register(eth.address, {
+    //     channelId: 0,
+    //     pairIndex: 1,
+        
+    //     sigmaSQ: 45659142400n,
+    //     miuLong: 64051194700n,
+    //     miuShort: 0n
+    // }, {nonce: 2694});
+    // console.log('10. fortFutures.register(hbtc.address)');
+    // await fortFutures.register(hbtc.address, {
+    //     channelId: 0,
+    //     pairIndex: 0,
+        
+    //     sigmaSQ: 31708924900n,
+    //     miuLong: 64051194700n,
+    //     miuShort: 0n
+    // }, {nonce: 2695});
 
-    // console.log('9. dcu.setMinter(hedgeOptions.address, 1)');
-    // await dcu.setMinter(hedgeOptions.address, 1);
-    // console.log('10. dcu.setMinter(hedgeFutures.address, 1)');
-    // await dcu.setMinter(hedgeFutures.address, 1);
-    // console.log('11. dcu.setMinter(hedgeVaultForStaking.address, 1)');
-    // await dcu.setMinter(hedgeVaultForStaking.address, 1);
+    // console.log('11. create eth long lever');
+    // await fortFutures.create(eth.address, [1, 2, 3, 4, 5], true, {nonce: 2696});
+    // console.log('12. create eth short lever');
+    // await fortFutures.create(eth.address, [1, 2, 3, 4, 5], false, {nonce: 2697});
 
-    // await hedgeOptions.setUsdtTokenAddress(usdt.address);
-    // await hedgeFutures.setUsdtTokenAddress(usdt.address);
-
-    // console.log('8.2 create lever');
-    // await hedgeFutures.create(eth.address, 1, true);
-    // await hedgeFutures.create(eth.address, 2, true);
-    // await hedgeFutures.create(eth.address, 3, true);
-    // await hedgeFutures.create(eth.address, 4, true);
-    // await hedgeFutures.create(eth.address, 5, true);
-    // await hedgeFutures.create(eth.address, 1, false);
-    // await hedgeFutures.create(eth.address, 2, false);
-    // await hedgeFutures.create(eth.address, 3, false);
-    // await hedgeFutures.create(eth.address, 4, false);
-    // await hedgeFutures.create(eth.address, 5, false);
+    // console.log('13. create hbtc long lever');
+    // await fortFutures.create(hbtc.address, [1, 2, 3, 4, 5], true, {nonce: 2698});
+    // console.log('14. create hbtc short lever');
+    // await fortFutures.create(hbtc.address, [1, 2, 3, 4, 5], false, {nonce: 2699});
 
 
     console.log('---------- OK ----------');
@@ -185,8 +187,8 @@ exports.deploy = async function() {
         hedgeGovernance: hedgeGovernance,
         dcu: dcu,
         hedgeDAO: hedgeDAO,
-        hedgeOptions: hedgeOptions,
-        hedgeFutures: hedgeFutures,
+        fortOptions: fortOptions,
+        fortFutures: fortFutures,
         hedgeVaultForStaking: hedgeVaultForStaking,
         nestPriceFacade: nestPriceFacade,
         //hedgeSwap: hedgeSwap
