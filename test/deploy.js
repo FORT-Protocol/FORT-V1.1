@@ -21,17 +21,17 @@ describe('HedgeOptions', function() {
 
         console.log('ok');
 
-        if (true) {
+        if (false) {
             // 1. Remove fortOptions and fortFutures from DCU minters
         }
 
-        if (true) {
+        if (false) {
             // 2. Deploy and update FortOptions
 
             // 2.1. Deploy FortOptions
             const newFortOptions = await FortOptions.deploy();
             console.log('newFortOptions: ' + newFortOptions.address);
-            
+
             // 2.2. Verify contract code
 
             // 2.3. Update
@@ -59,7 +59,7 @@ describe('HedgeOptions', function() {
             // 2.5. Check
         }
 
-        if (true) {
+        if (false) {
             // 3. Deploy and update FortFutures
 
             // 3.1. Deploy FortFutures
@@ -97,6 +97,5 @@ describe('HedgeOptions', function() {
 
             // 3.6. Check
         }
-
     });
 });
