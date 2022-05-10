@@ -41,7 +41,7 @@ describe('HedgeOptions', function() {
 
            //const optionCount = await hedgeOptions.getOptionCount();
            //console.log('optionCount: ' + optionCount);
-           const futures = await fortFutures.find(0, 10, 100000, '0x5fa1dd7f6dce7066d8be8b8787575d66a20dc44c');
+           const futures = await fortFutures.find(0, 10, 100000, '0xc67d4c582cbc48eb3701b9ab9a0ccdbc23e5aebc');
 
            for(var i = 0; i < futures.length; ++i) {
                const o = futures[i];

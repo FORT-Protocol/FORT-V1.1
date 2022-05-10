@@ -13,8 +13,8 @@ exports.deploy = async function() {
     const HedgeGovernance = await ethers.getContractFactory('HedgeGovernance');
     const DCU = await ethers.getContractFactory('DCU');
     const HedgeDAO = await ethers.getContractFactory('HedgeDAO');
-    const HedgeOptions = await ethers.getContractFactory('HedgeOptions');
-    const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
+    const HedgeOptions = await ethers.getContractFactory('FortOptions');
+    const HedgeFutures = await ethers.getContractFactory('FortFutures');
     const HedgeVaultForStaking = await ethers.getContractFactory('HedgeVaultForStaking');
     // const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
 

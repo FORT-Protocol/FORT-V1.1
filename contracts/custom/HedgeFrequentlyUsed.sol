@@ -16,35 +16,3 @@ contract HedgeFrequentlyUsed is HedgeBase {
     // USDT base
     uint constant USDT_BASE = 1 ether;
 }
-
-// /// @dev Base contract of Hedge
-// contract HedgeFrequentlyUsed is HedgeBase {
-
-//     // Address of DCU contract
-//     address DCU_TOKEN_ADDRESS;
-
-//     // Address of NestOpenPrice contract
-//     address NEST_OPEN_PRICE;
-    
-//     address USDT_TOKEN_ADDRESS;
-
-//     // USDT base
-//     uint constant USDT_BASE = 1 ether;
-
-//     // TODO:
-//     /// @dev Rewritten in the implementation contract, for load other contract addresses. Call 
-//     ///      super.update(newGovernance) when overriding, and override method without onlyGovernance
-//     /// @param newGovernance IHedgeGovernance implementation contract address
-//     function update(address newGovernance) public override {
-
-//         super.update(newGovernance);
-//         (
-//             DCU_TOKEN_ADDRESS,//address dcuToken,
-//             ,//address hedgeDAO,
-//             ,//address hedgeOptions,
-//             ,//address hedgeFutures,
-//             ,//address hedgeVaultForStaking,
-//             NEST_OPEN_PRICE //address nestPriceFacade
-//         ) = IHedgeGovernance(newGovernance).getBuiltinAddress();
-//     }
-// }
