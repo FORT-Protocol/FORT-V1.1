@@ -77,7 +77,7 @@ contract FortFuturesFix is ChainParameter, HedgeFrequentlyUsed, FortPriceAdapter
     /// @dev Fix basePrice for addr
     /// @param index Index of future
     /// @param addr Target address
-    function fix(uint index, address addr) external {
+    function fix(uint index, address addr) external onlyGovernance {
         Account storage account = _futures[index].accounts[addr];
         account.basePrice = _encodeFloat(_decodeFloat(account.basePrice) * 10e12);
     }
