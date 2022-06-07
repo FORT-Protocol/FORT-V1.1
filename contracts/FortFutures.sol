@@ -5,13 +5,13 @@ pragma solidity ^0.8.6;
 import "./interfaces/IFortFutures.sol";
 
 import "./custom/ChainParameter.sol";
-import "./custom/HedgeFrequentlyUsed.sol";
+import "./custom/FortFrequentlyUsed.sol";
 import "./custom/FortPriceAdapter.sol";
 
 import "./DCU.sol";
 
 /// @dev Futures
-contract FortFutures is ChainParameter, HedgeFrequentlyUsed, FortPriceAdapter, IFortFutures {
+contract FortFutures is ChainParameter, FortFrequentlyUsed, FortPriceAdapter, IFortFutures {
 
     /// @dev Account information
     struct Account {
@@ -61,7 +61,7 @@ contract FortFutures is ChainParameter, HedgeFrequentlyUsed, FortPriceAdapter, I
     }
 
     /// @dev To support open-zeppelin/upgrades
-    /// @param governance IHedgeGovernance implementation contract address
+    /// @param governance IFortGovernance implementation contract address
     function initialize(address governance) public override {
         super.initialize(governance);
         _futures.push();

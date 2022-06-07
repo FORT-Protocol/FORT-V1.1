@@ -3,11 +3,11 @@
 pragma solidity ^0.8.6;
 
 import "./custom/ChainParameter.sol";
-import "./custom/HedgeFrequentlyUsed.sol";
+import "./custom/FortFrequentlyUsed.sol";
 import "./custom/FortPriceAdapter.sol";
 
 /// @dev Futures
-contract FortFuturesFix is ChainParameter, HedgeFrequentlyUsed, FortPriceAdapter {
+contract FortFuturesFix is ChainParameter, FortFrequentlyUsed, FortPriceAdapter {
 
     /// @dev Account information
     struct Account {

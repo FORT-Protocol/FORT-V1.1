@@ -7,13 +7,13 @@ import "./libs/ABDKMath64x64.sol";
 import "./interfaces/IFortOptions.sol";
 
 import "./custom/ChainParameter.sol";
-import "./custom/HedgeFrequentlyUsed.sol";
+import "./custom/FortFrequentlyUsed.sol";
 import "./custom/FortPriceAdapter.sol";
 
 import "./DCU.sol";
 
 /// @dev European option
-contract FortOptions is ChainParameter, HedgeFrequentlyUsed, FortPriceAdapter, IFortOptions {
+contract FortOptions is ChainParameter, FortFrequentlyUsed, FortPriceAdapter, IFortOptions {
 
     /// @dev Option structure
     struct Option {
@@ -61,7 +61,7 @@ contract FortOptions is ChainParameter, HedgeFrequentlyUsed, FortPriceAdapter, I
     }
 
     /// @dev To support open-zeppelin/upgrades
-    /// @param governance IHedgeGovernance implementation contract address
+    /// @param governance IFortGovernance implementation contract address
     function initialize(address governance) public override {
         super.initialize(governance);
         _accounts.push();

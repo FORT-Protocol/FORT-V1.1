@@ -14,7 +14,7 @@ describe('deploy', function() {
             pusd,
             peth,
 
-            hedgeGovernance,
+            fortGovernance,
             fortOptions, fortFutures,
             nestPriceFacade, hedgeSwap
         } = await deploy();

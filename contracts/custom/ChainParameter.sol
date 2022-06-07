@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.6;
 
-/// @dev Base contract of Hedge
+/// @dev Base contract of Fort
 contract ChainParameter {
 
     // Block time. ethereum 14 seconds, BSC 3 seconds, polygon 2.2 seconds

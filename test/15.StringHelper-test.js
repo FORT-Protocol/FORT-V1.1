@@ -8,8 +8,8 @@ describe('15.StringHelper-test', function() {
         
         const { 
             eth, usdt, hbtc, dcu, 
-            fortOptions, fortFutures, nestPriceFacade, hedgeGovernance,
-            hedgeVaultForStaking, USDT_DECIMALS
+            fortOptions, fortFutures, nestPriceFacade, fortGovernance,
+            fortVaultForStaking, USDT_DECIMALS
         } = await deploy();
 
         await dcu.setMinter(owner.address, 1);
@@ -36,7 +36,7 @@ describe('15.StringHelper-test', function() {
                 height: await ethers.provider.getBlockNumber(),
                 owner: await getAccountInfo(owner),
                 addr1: await getAccountInfo(addr1),
-                hedgeVaultForStaking: await getAccountInfo(hedgeVaultForStaking),
+                fortVaultForStaking: await getAccountInfo(fortVaultForStaking),
             };
         }
 

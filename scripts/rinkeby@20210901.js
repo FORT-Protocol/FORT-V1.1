@@ -10,12 +10,12 @@ exports.deploy = async function() {
     const eth = { address: '0x0000000000000000000000000000000000000000' };
     const TestERC20 = await ethers.getContractFactory('TestERC20');
     const NestPriceFacade = await ethers.getContractFactory('NestPriceFacade');
-    const HedgeGovernance = await ethers.getContractFactory('HedgeGovernance');
+    const FortGovernance = await ethers.getContractFactory('FortGovernance');
     const DCU = await ethers.getContractFactory('DCU');
-    const HedgeDAO = await ethers.getContractFactory('HedgeDAO');
-    const HedgeOptions = await ethers.getContractFactory('HedgeOptions');
-    const HedgeFutures = await ethers.getContractFactory('HedgeFutures');
-    const HedgeVaultForStaking = await ethers.getContractFactory('HedgeVaultForStaking');
+    const FortDAO = await ethers.getContractFactory('FortDAO');
+    const FortOptions = await ethers.getContractFactory('FortOptions');
+    const FortFutures = await ethers.getContractFactory('FortFutures');
+    const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
 
     console.log('** Deploy: rinkeby@20210901.js **');
     
@@ -31,12 +31,12 @@ exports.deploy = async function() {
     // usdt: 0x2d750210c0b5343a0b79beff8F054C9add7d2411
     // hbtc: 0xaE73d363Cb4aC97734E07e48B01D0a1FF5D1190B
     // nestPriceFacade: 0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838
-    // hedgeGovernance: 0xDD61E5604580AfeEe202d533eefE688091b8127e
+    // fortGovernance: 0xDD61E5604580AfeEe202d533eefE688091b8127e
     // dcu: 0xDB7b4FdF99eEE8E4Cb8373630c923c51c1275382
-    // hedgeDAO: 0xe7012078Cfa3E083d3Fe7B79bA4d8913Be48362F
-    // hedgeOptions: 0x5bA7CBD3cC7C3ced0f94FC3CFd331260569E19Ca
-    // hedgeFutures: 0x1820A4c392d71B65C3C32c1a6E8d94A3FB785fae
-    // hedgeVaultForStaking: 0xF06Ca516B6e11AB7843FB0B1a7eECBf0e57B3B64
+    // fortDAO: 0xe7012078Cfa3E083d3Fe7B79bA4d8913Be48362F
+    // fortOptions: 0x5bA7CBD3cC7C3ced0f94FC3CFd331260569E19Ca
+    // fortFutures: 0x1820A4c392d71B65C3C32c1a6E8d94A3FB785fae
+    // fortVaultForStaking: 0xF06Ca516B6e11AB7843FB0B1a7eECBf0e57B3B64
     // ETH/USDT+F1: 0x1BcD7C075C6b94ef4D6a1aEE4496828d61B5f5F1
     // ETH/USDT+F2: 0x1B7D9daDBE37Eb6dF32c8682Ee3090b630D24F3e
     // ETH/USDT+F5: 0x6A308373912a73Fe17AB40637061A5eeeDD16975
@@ -62,29 +62,29 @@ exports.deploy = async function() {
     const nestPriceFacade = await NestPriceFacade.attach('0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838');
     console.log('nestPriceFacade: ' + nestPriceFacade.address);
 
-    //const hedgeGovernance = await upgrades.deployProxy(HedgeGovernance, ['0x0000000000000000000000000000000000000000'], { initializer: 'initialize' });
-    const hedgeGovernance = await HedgeGovernance.attach('0xDD61E5604580AfeEe202d533eefE688091b8127e');
-    console.log('hedgeGovernance: ' + hedgeGovernance.address);
+    //const fortGovernance = await upgrades.deployProxy(FortGovernance, ['0x0000000000000000000000000000000000000000'], { initializer: 'initialize' });
+    const fortGovernance = await FortGovernance.attach('0xDD61E5604580AfeEe202d533eefE688091b8127e');
+    console.log('fortGovernance: ' + fortGovernance.address);
 
     //const dcu = await DCU.deploy();
     const dcu = await DCU.attach('0xDB7b4FdF99eEE8E4Cb8373630c923c51c1275382');
     console.log('dcu: ' + dcu.address);
 
-    //const hedgeDAO = await upgrades.deployProxy(HedgeDAO, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeDAO = await HedgeDAO.attach('0xe7012078Cfa3E083d3Fe7B79bA4d8913Be48362F');
-    console.log('hedgeDAO: ' + hedgeDAO.address);
+    //const fortDAO = await upgrades.deployProxy(FortDAO, [fortGovernance.address], { initializer: 'initialize' });
+    const fortDAO = await FortDAO.attach('0xe7012078Cfa3E083d3Fe7B79bA4d8913Be48362F');
+    console.log('fortDAO: ' + fortDAO.address);
 
-    //const hedgeOptions = await upgrades.deployProxy(HedgeOptions, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeOptions = await HedgeOptions.attach('0x5bA7CBD3cC7C3ced0f94FC3CFd331260569E19Ca');
-    console.log('hedgeOptions: ' + hedgeOptions.address);
+    //const fortOptions = await upgrades.deployProxy(FortOptions, [fortGovernance.address], { initializer: 'initialize' });
+    const fortOptions = await FortOptions.attach('0x5bA7CBD3cC7C3ced0f94FC3CFd331260569E19Ca');
+    console.log('fortOptions: ' + fortOptions.address);
 
-    //const hedgeFutures = await upgrades.deployProxy(HedgeFutures, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeFutures = await HedgeFutures.attach('0x1820A4c392d71B65C3C32c1a6E8d94A3FB785fae');
-    console.log('hedgeFutures: ' + hedgeFutures.address);
+    //const fortFutures = await upgrades.deployProxy(FortFutures, [fortGovernance.address], { initializer: 'initialize' });
+    const fortFutures = await FortFutures.attach('0x1820A4c392d71B65C3C32c1a6E8d94A3FB785fae');
+    console.log('fortFutures: ' + fortFutures.address);
 
-    //const hedgeVaultForStaking = await upgrades.deployProxy(HedgeVaultForStaking, [hedgeGovernance.address], { initializer: 'initialize' });
-    const hedgeVaultForStaking = await HedgeVaultForStaking.attach('0xF06Ca516B6e11AB7843FB0B1a7eECBf0e57B3B64');
-    console.log('hedgeVaultForStaking: ' + hedgeVaultForStaking.address);
+    //const fortVaultForStaking = await upgrades.deployProxy(FortVaultForStaking, [fortGovernance.address], { initializer: 'initialize' });
+    const fortVaultForStaking = await FortVaultForStaking.attach('0xF06Ca516B6e11AB7843FB0B1a7eECBf0e57B3B64');
+    console.log('fortVaultForStaking: ' + fortVaultForStaking.address);
 
     console.log('---------- OK ----------');
     
@@ -92,12 +92,12 @@ exports.deploy = async function() {
         usdt: usdt,
         hbtc: hbtc,
 
-        hedgeGovernance: hedgeGovernance,
+        fortGovernance: fortGovernance,
         dcu: dcu,
-        hedgeDAO: hedgeDAO,
-        hedgeOptions: hedgeOptions,
-        hedgeFutures: hedgeFutures,
-        hedgeVaultForStaking: hedgeVaultForStaking,
+        fortDAO: fortDAO,
+        fortOptions: fortOptions,
+        fortFutures: fortFutures,
+        fortVaultForStaking: fortVaultForStaking,
         nestPriceFacade: nestPriceFacade
     };
 
