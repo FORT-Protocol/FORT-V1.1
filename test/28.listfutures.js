@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const { deploy } = require('../scripts/deploy.js');
 const { toBigInt, toDecimal, showReceipt, snd, tableSnd, d1, Vc, Vp } = require('./utils.js');
 
-describe('HedgeOptions', function() {
+describe('28.listfutures', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
         
@@ -28,7 +28,7 @@ describe('HedgeOptions', function() {
         }
 
         const cfg = async function(tokenAddress) {
-            let c = await hedgeOptions.getConfig(tokenAddress);
+            let c = await fortOptions.getConfig(tokenAddress);
             return {
                 sigmaSQ: c.sigmaSQ.toString(),
                 miu: c.miu.toString(),
@@ -39,7 +39,7 @@ describe('HedgeOptions', function() {
         if (true) {
            console.log('1. list futures');
 
-           //const optionCount = await hedgeOptions.getOptionCount();
+           //const optionCount = await fortOptions.getOptionCount();
            //console.log('optionCount: ' + optionCount);
            const futures = await fortFutures.find(0, 10, 100000, '0xc67d4c582cbc48eb3701b9ab9a0ccdbc23e5aebc');
 

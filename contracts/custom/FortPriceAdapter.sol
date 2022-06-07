@@ -6,6 +6,8 @@ import "./HedgeFrequentlyUsed.sol";
 
 import "../interfaces/INestBatchPrice2.sol";
 
+import "hardhat/console.sol";
+
 /// @dev Base contract of Hedge
 contract FortPriceAdapter is HedgeFrequentlyUsed {
     
@@ -57,6 +59,7 @@ contract FortPriceAdapter is HedgeFrequentlyUsed {
         } (uint(tokenConfig.channelId), _pairIndices(uint(tokenConfig.pairIndex)), 1, payback);
 
         oraclePrice = _toUSDTPrice(prices[1]);
+        console.log('_latestPrice: ', oraclePrice);
     }
 
     // Find price by blockNumber

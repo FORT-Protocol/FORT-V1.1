@@ -2,13 +2,13 @@ const { expect } = require('chai');
 const { deploy } = require('../scripts/deploy.js');
 const { toBigInt, toDecimal, showReceipt, snd, tableSnd, d1, Vc, Vp } = require('./utils.js');
 
-describe('HedgeOptions', function() {
+describe('17.HedgeFrequentlyUsed-test', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
         
         const { 
             eth, usdt, hbtc, dcu, 
-            hedgeOptions, hedgeFutures, nestPriceFacade, hedgeGovernance,
+            fortOptions, fortFutures, nestPriceFacade, hedgeGovernance,
             hedgeVaultForStaking, hedgeDAO, USDT_DECIMALS
         } = await deploy();
 
@@ -41,7 +41,7 @@ describe('HedgeOptions', function() {
         }
 
         const cfg = async function(tokenAddress) {
-            let c = await hedgeOptions.getConfig(tokenAddress);
+            let c = await fortOptions.getConfig(tokenAddress);
             return {
                 sigmaSQ: c.sigmaSQ.toString(),
                 miu: c.miu.toString(),
@@ -60,17 +60,17 @@ describe('HedgeOptions', function() {
 
         if (true) {
             console.log('1. update');
-            await hedgeOptions.update(hedgeGovernance.address);
-            await hedgeOptions.update(hedgeGovernance.address);
-            await hedgeOptions.update(hedgeGovernance.address);
-            await hedgeOptions.update(hedgeGovernance.address);
-            await hedgeOptions.update(hedgeGovernance.address);
-            await hedgeOptions.update(hedgeGovernance.address);
+            await fortOptions.update(hedgeGovernance.address);
+            await fortOptions.update(hedgeGovernance.address);
+            await fortOptions.update(hedgeGovernance.address);
+            await fortOptions.update(hedgeGovernance.address);
+            await fortOptions.update(hedgeGovernance.address);
+            await fortOptions.update(hedgeGovernance.address);
         }
 
         if (true) {
             console.log('2. setUsdtTokenAddress');
-            //await hedgeOptions.setUsdtTokenAddress(hedgeGovernance.address);
+            //await fortOptions.setUsdtTokenAddress(hedgeGovernance.address);
         }
     });
 });

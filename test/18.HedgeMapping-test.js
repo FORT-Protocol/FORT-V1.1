@@ -2,13 +2,13 @@ const { expect } = require('chai');
 const { deploy } = require('../scripts/deploy.js');
 const { toBigInt, toDecimal, showReceipt, snd, tableSnd, d1, Vc, Vp } = require('./utils.js');
 
-describe('HedgeOptions', function() {
+describe('18.HedgeMapping-test', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
         
         const { 
             eth, usdt, hbtc, dcu, 
-            hedgeOptions, hedgeFutures, nestPriceFacade, hedgeGovernance,
+            fortOptions, fortFutures, nestPriceFacade, hedgeGovernance,
             hedgeVaultForStaking, hedgeDAO, USDT_DECIMALS
         } = await deploy();
 
@@ -41,7 +41,7 @@ describe('HedgeOptions', function() {
         }
 
         const cfg = async function(tokenAddress) {
-            let c = await hedgeOptions.getConfig(tokenAddress);
+            let c = await fortOptions.getConfig(tokenAddress);
             return {
                 sigmaSQ: c.sigmaSQ.toString(),
                 miu: c.miu.toString(),
@@ -64,21 +64,21 @@ describe('HedgeOptions', function() {
             console.log(r);
             // dcuToken: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
             // hedgeDAO: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',
-            // hedgeOptions: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
-            // hedgeFutures: '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
+            // fortOptions: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
+            // fortFutures: '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
             // hedgeVaultForStaking: '0x9A676e781A523b5d0C0e43731313A708CB607508',
             // nestPriceFacade: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
             expect(r.dcuToken).to.eq(dcu.address);
             expect(r.hedgeDAO).to.eq(hedgeDAO.address);
-            expect(r.hedgeOptions).to.eq(hedgeOptions.address);
-            expect(r.hedgeFutures).to.eq(hedgeFutures.address);
+            expect(r.hedgeOptions).to.eq(fortOptions.address);
+            expect(r.hedgeFutures).to.eq(fortFutures.address);
             expect(r.hedgeVaultForStaking).to.eq(hedgeVaultForStaking.address);
             expect(r.nestPriceFacade).to.eq(nestPriceFacade.address);
 
             expect(await hedgeGovernance.getDCUTokenAddress()).to.eq(dcu.address);
             expect(await hedgeGovernance.getHedgeDAOAddress()).to.eq(hedgeDAO.address);
-            expect(await hedgeGovernance.getHedgeOptionsAddress()).to.eq(hedgeOptions.address);
-            expect(await hedgeGovernance.getHedgeFuturesAddress()).to.eq(hedgeFutures.address);
+            expect(await hedgeGovernance.getHedgeOptionsAddress()).to.eq(fortOptions.address);
+            expect(await hedgeGovernance.getHedgeFuturesAddress()).to.eq(fortFutures.address);
             expect(await hedgeGovernance.getHedgeVaultForStakingAddress()).to.eq(hedgeVaultForStaking.address);
             expect(await hedgeGovernance.getNestPriceFacade()).to.eq(nestPriceFacade.address);
         }
@@ -88,8 +88,8 @@ describe('HedgeOptions', function() {
             await hedgeGovernance.setBuiltinAddress(
                 '0x0000000000000000000000000000000000000001', //address dcuToken,
                 '0x0000000000000000000000000000000000000002', //address hedgeDAO,
-                '0x0000000000000000000000000000000000000003', //address hedgeOptions,
-                '0x0000000000000000000000000000000000000004', //address hedgeFutures,
+                '0x0000000000000000000000000000000000000003', //address fortOptions,
+                '0x0000000000000000000000000000000000000004', //address fortFutures,
                 '0x0000000000000000000000000000000000000005', //address hedgeVaultForStaking,
                 '0x0000000000000000000000000000000000000006', //address nestPriceFacade
             )

@@ -38,15 +38,6 @@ exports.deploy = async function() {
     // hedgeDAO: 0x55D6Fe1C851181F5C1779Bf04822675Ae144b38F
     // hedgeOptions: 0x66bD0139b6216B740820a54a71a2CDFf2070e76B
     // hedgeFutures: 0xc5086B5a9AC3A4036416690E382AbD7808DC307c
-
-    //     ** Deploy: rinkeby@20210819.js **
-    // usdt: 0x2d750210c0b5343a0b79beff8F054C9add7d2411
-    // nestPriceFacade: 0x40C3EB032f27fDa7AdcF1B753c75B84e27f26838
-    // hedgeGovernance: 0xE1328C673620433e0c1847e5BfB698DbCED9688b
-    // dcu: 0x6747972f3Fc6f4A4fC9c8a1fF4C2899dc83c4DF7
-    // hedgeDAO: 0x55D6Fe1C851181F5C1779Bf04822675Ae144b38F
-    // hedgeOptions: 0x66bD0139b6216B740820a54a71a2CDFf2070e76B
-    // hedgeFutures: 0xc5086B5a9AC3A4036416690E382AbD7808DC307c
     // hedgeVaultForStaking: 0x4A0C01665c10a7635fB33BCC45198dfC2f31db0C
 
     //const usdt = await TestERC20.deploy('USDT', 'USDT', 6);
@@ -80,45 +71,6 @@ exports.deploy = async function() {
     //const hedgeVaultForStaking = await upgrades.deployProxy(HedgeVaultForStaking, [hedgeGovernance.address], { initializer: 'initialize' });
     const hedgeVaultForStaking = await HedgeVaultForStaking.attach('0x4A0C01665c10a7635fB33BCC45198dfC2f31db0C');
     console.log('hedgeVaultForStaking: ' + hedgeVaultForStaking.address);
-
-    // // await hedgeGovernance.initialize('0x0000000000000000000000000000000000000000');
-    // console.log('1. dcu.initialize(hedgeGovernance.address)');
-    // await dcu.initialize(hedgeGovernance.address);
-    // // await hedgeDAO.initialize(hedgeGovernance.address);
-    // // await hedgeOptions.initialize(hedgeGovernance.address);
-    // // await hedgeFutures.initialize(hedgeGovernance.address);
-    // // await hedgeVaultForStaking.initialize(hedgeGovernance.address);
-
-    // console.log('2. hedgeGovernance.setBuiltinAddress()');
-    // await hedgeGovernance.setBuiltinAddress(
-    //     dcu.address,
-    //     hedgeDAO.address,
-    //     hedgeOptions.address,
-    //     hedgeFutures.address,
-    //     hedgeVaultForStaking.address,
-    //     nestPriceFacade.address
-    // );
-
-    // console.log('3. dcu.update()');
-    // await dcu.update(hedgeGovernance.address);
-    // console.log('4. hedgeDAO.update()');
-    // await hedgeDAO.update(hedgeGovernance.address);
-    // console.log('5. hedgeOptions.update()');
-    // await hedgeOptions.update(hedgeGovernance.address);
-    // console.log('6. hedgeFutures.update()');
-    // await hedgeFutures.update(hedgeGovernance.address);
-    // console.log('7. hedgeVaultForStaking.update()');
-    // await hedgeVaultForStaking.update(hedgeGovernance.address);
-
-    // console.log('8. hedgeOptions.setConfig()');
-    // await hedgeOptions.setConfig('175482725206');
-
-    // console.log('9. dcu.setMinter(hedgeOptions.address, 1)');
-    // await dcu.setMinter(hedgeOptions.address, 1);
-    // console.log('10. dcu.setMinter(hedgeFutures.address, 1)');
-    // await dcu.setMinter(hedgeFutures.address, 1);
-    // console.log('11. dcu.setMinter(hedgeVaultForStaking.address, 1)');
-    // await dcu.setMinter(hedgeVaultForStaking.address, 1);
 
     console.log('---------- OK ----------');
     

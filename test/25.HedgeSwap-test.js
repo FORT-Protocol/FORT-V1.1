@@ -2,11 +2,11 @@
 // const { deploy } = require('../scripts/deploy.js');
 // const { toBigInt, toDecimal, showReceipt, snd, tableSnd, d1, Vc, Vp } = require('./utils.js');
 
-// describe('HedgeSwap', function() {
+// describe('25.HedgeSwap-test', function() {
 //     it('First', async function() {
 //         var [owner, addr1, addr2] = await ethers.getSigners();
         
-//         const { eth, usdt, hbtc, dcu, hedgeOptions, hedgeFutures, nestPriceFacade, hedgeSwap } = await deploy();
+//         const { eth, usdt, hbtc, dcu, fortOptions, fortFutures, nestPriceFacade, hedgeSwap } = await deploy();
 //         const TestERC20 = await ethers.getContractFactory('TestERC20');
 //         const nest = await TestERC20.deploy('NEST', 'NEST', 18);
 

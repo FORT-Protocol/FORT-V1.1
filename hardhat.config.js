@@ -12,7 +12,8 @@ task("accounts", "Prints the list of accounts", async () => {
     console.log(account.address);
   }
 });
-
+process.env.HTTP_PROXY = 'http://127.0.0.1:8580';
+process.env.HTTPS_PROXY = 'http://127.0.0.1:8580';
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
@@ -21,7 +22,7 @@ task("accounts", "Prints the list of accounts", async () => {
  */
 module.exports = {
   solidity: {
-    version: '0.8.13',
+    version: '0.8.14',
     settings: {
       optimizer: {
         enabled: true,

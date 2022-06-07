@@ -32,10 +32,6 @@ exports.deploy = async function() {
     const hedgeGovernance = await HedgeGovernance.attach('0x3e7D350BbAb71cAA2304e979aa6Af007EF5ECcB8');
     console.log('hedgeGovernance: ' + hedgeGovernance.address);
 
-    // // await hedgeGovernance.initialize('0x0000000000000000000000000000000000000000');
-    // console.log('1. dcu.initialize(hedgeGovernance.address)');
-    // await dcu.initialize(hedgeGovernance.address);
-
     console.log('---------- OK ----------');
     
     const contracts = {
