@@ -68,7 +68,7 @@ exports.deploy = async function() {
 
     //const fortVaultForStaking = await upgrades.deployProxy(FortVaultForStaking, [fortGovernance.address], { initializer: 'initialize' });
     const fortVaultForStaking = await FortVaultForStaking.attach('0x8A68626A4c37481b4941f9a4137C94FDa41e9D91');
-    console.log('fortVaultForStaking: ' +hedgeVaultForStakingng.address);
+    console.log('fortVaultForStaking: ' + fortVaultForStaking.address);
 
     console.log('---------- OK ----------');
     
@@ -82,7 +82,7 @@ exports.deploy = async function() {
         fortDAO: fortDAO,
         fortOptions: fortOptions,
         fortFutures: fortFutures,
-        fortVaultForStaking:hedgeVaultForStakingng,
+        fortVaultForStaking: fortVaultForStaking,
         nestPriceFacade: nestPriceFacade
     };
 

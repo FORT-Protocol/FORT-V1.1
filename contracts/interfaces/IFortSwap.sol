@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.6;
 
-/// @dev Defines methods for HedgeSwap
-interface IHedgeSwap {
+/// @dev Defines methods for FortSwap
+interface IFortSwap {
 
     /// @dev Swap for dcu with exact nest amount
     /// @param nestAmount Amount of nest

@@ -16,7 +16,7 @@ exports.deploy = async function() {
     const FortOptions = await ethers.getContractFactory('FortOptions');
     const FortFutures = await ethers.getContractFactory('FortFutures');
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
-    // const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
+    // const FortSwap = await ethers.getContractFactory('FortSwap');
 
     console.log('** Deploy: part4-mainnet@20211026.js **');
     
@@ -43,7 +43,7 @@ exports.deploy = async function() {
     // fortFutures: 0x622f1CB39AdE2131061C68E61334D41321033ab4
     // fortVaultForStaking: 0xE3940A3E94bca34B9175d156a5E9C5728dFE922F
     // proxyAdmin: 0x39016AeAe6F975796BFC007c7aA655fB691Fc6e8
-    // hedgeSwap: 0x6e7fd4BA02A5a7a75Ea3CcE37e221dC144D606Dd
+    // fortSwap: 0x6e7fd4BA02A5a7a75Ea3CcE37e221dC144D606Dd
 
     //const nest = await TestERC20.deploy('NEST', 'NEST', 18);
     const nest = await TestERC20.attach('0x04abEdA201850aC0124161F037Efd70c74ddC74C');

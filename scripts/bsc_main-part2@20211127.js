@@ -15,7 +15,7 @@ exports.deploy = async function() {
     const FortDAO = await ethers.getContractFactory('FortDAO');
     const FortOptions = await ethers.getContractFactory('FortOptions');
     const FortFutures = await ethers.getContractFactory('FortFutures');
-    const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
+    const FortSwap = await ethers.getContractFactory('FortSwap');
 
     console.log('** Deploy: bsc_main-part2@20211127.js **');
         
@@ -29,7 +29,7 @@ exports.deploy = async function() {
     // nestPriceFacade: 0x09CE0e021195BA2c1CDE62A8B187abf810951540
     // fortOptions: 0x284935F8C571d054Df98eDA8503ea13cde5fd8Cc
     // fortFutures: 0x8c5052f7747D8Ebc2F069286416b6aE8Ad3Cc149
-    // hedgeSwap: 0x2Cd1Bf9345E969b5DFc6D88000475aD6d487363A
+    // fortSwap: 0x2Cd1Bf9345E969b5DFc6D88000475aD6d487363A
     // proxyAdmin: 0xB16260599777EFFB17fd2a8fD30c449e5b71C088
 
     //const dcu = await DCU.deploy();
@@ -52,9 +52,9 @@ exports.deploy = async function() {
     const fortFutures = await FortFutures.attach('0x8c5052f7747D8Ebc2F069286416b6aE8Ad3Cc149');
     console.log('fortFutures: ' + fortFutures.address);
 
-    //const hedgeSwap = await upgrades.deployProxy(HedgeSwap, [fortGovernance.address], { initializer: 'initialize' });
-    const hedgeSwap = await HedgeSwap.attach('0x2Cd1Bf9345E969b5DFc6D88000475aD6d487363A');
-    console.log('hedgeSwap: ' + hedgeSwap.address);
+    //const fortSwap = await upgrades.deployProxy(FortSwap, [fortGovernance.address], { initializer: 'initialize' });
+    const fortSwap = await FortSwap.attach('0x2Cd1Bf9345E969b5DFc6D88000475aD6d487363A');
+    console.log('fortSwap: ' + fortSwap.address);
 
     console.log('---------- OK ----------');
     
@@ -64,7 +64,7 @@ exports.deploy = async function() {
 
         fortOptions: fortOptions,
         fortFutures: fortFutures,
-        hedgeSwap: hedgeSwap,
+        fortSwap: fortSwap,
 
         nestPriceFacade: nestPriceFacade
     };

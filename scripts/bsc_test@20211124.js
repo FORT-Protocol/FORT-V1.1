@@ -16,7 +16,7 @@ exports.deploy = async function() {
     const FortOptions = await ethers.getContractFactory('FortOptions');
     const FortFutures = await ethers.getContractFactory('FortFutures');
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
-    const HedgeSwap = await ethers.getContractFactory('HedgeSwap');
+    const FortSwap = await ethers.getContractFactory('FortSwap');
 
     console.log('** Deploy: bsc_test@20211123.js **');
     
@@ -35,7 +35,7 @@ exports.deploy = async function() {
     // fortDAO: 0x81c952c4EEE91DF16A7908E1869a31E438FbCE44
     // fortOptions: 0x19465d54ba7c492174127244cc26dE49F0cC1F1f
     // fortFutures: 0xFD42E41B96BC69e8B0763B2Ed75CD50347b9778D
-    // hedgeSwap: 0xD83C860d3A27cC5EddaB68EaBFCF9cc8ad38F15D
+    // fortSwap: 0xD83C860d3A27cC5EddaB68EaBFCF9cc8ad38F15D
     // proxyAdmin: 0xB5604C3C3AE902513731037B9c7368842582642e
 
     const nest = await TestERC20.attach('0x821edD79cc386E56FeC9DA5793b87a3A52373cdE');
@@ -69,9 +69,9 @@ exports.deploy = async function() {
     const fortFutures = await FortFutures.attach('0xFD42E41B96BC69e8B0763B2Ed75CD50347b9778D');
     console.log('fortFutures: ' + fortFutures.address);
 
-    //const hedgeSwap = await upgrades.deployProxy(HedgeSwap, [fortGovernance.address], { initializer: 'initialize' });
-    const hedgeSwap = await HedgeSwap.attach('0xD83C860d3A27cC5EddaB68EaBFCF9cc8ad38F15D');
-    console.log('hedgeSwap: ' + hedgeSwap.address);
+    //const fortSwap = await upgrades.deployProxy(FortSwap, [fortGovernance.address], { initializer: 'initialize' });
+    const fortSwap = await FortSwap.attach('0xD83C860d3A27cC5EddaB68EaBFCF9cc8ad38F15D');
+    console.log('fortSwap: ' + fortSwap.address);
 
     console.log('---------- OK ----------');
     
@@ -87,7 +87,7 @@ exports.deploy = async function() {
         fortFutures: fortFutures,
         //fortVaultForStaking: fortVaultForStaking,
         nestPriceFacade: nestPriceFacade,
-        hedgeSwap: hedgeSwap,
+        fortSwap: fortSwap,
 
         BLOCK_TIME: 3
     };

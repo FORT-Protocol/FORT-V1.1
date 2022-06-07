@@ -69,7 +69,7 @@ exports.deploy = async function() {
         fortDAO: fortDAO,
         fortOptions: fortOptions,
         fortFutures: fortFutures,
-        hedgeVaultForStakinggghedgeVaultForStakingngngngng,
+        fortVaultForStaking: fortVaultForStaking,
         nestPriceFacade: nestPriceFacade
     };
 

@@ -16,7 +16,7 @@ describe('deploy', function() {
 
             fortGovernance,
             fortOptions, fortFutures,
-            nestPriceFacade, hedgeSwap
+            nestPriceFacade, fortSwap
         } = await deploy();
 
         console.log('ok');

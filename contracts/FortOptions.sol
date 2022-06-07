@@ -40,6 +40,7 @@ contract FortOptions is ChainParameter, FortFrequentlyUsed, FortPriceAdapter, IF
     // Proportion of option selling value, 10000 basis. 9500
     uint constant SELL_RATE = 9500;
 
+    // Use this array to skip old storage slot, only for ethereum
     uint[8] _oldStoragePlaceHolder;
 
     // Option array
