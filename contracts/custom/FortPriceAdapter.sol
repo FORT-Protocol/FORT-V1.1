@@ -9,7 +9,7 @@ import "../interfaces/INestBatchPrice2.sol";
 /// @dev PriceAdapter from NEST to Fort
 contract FortPriceAdapter is FortFrequentlyUsed {
     
-    // token configuration
+    // Token configuration
     struct TokenConfig {
         // The channelId for call nest price
         uint16 channelId;

@@ -4,7 +4,7 @@ pragma solidity ^0.8.6;
 
 import "../FortBase.sol";
 
-// /// @dev Base contract of Fort
+// /// @dev This contract include frequently used data
 // contract FortFrequentlyUsed is FortBase {
 
 //     // Address of DCU contract
@@ -17,7 +17,7 @@ import "../FortBase.sol";
 //     uint constant USDT_BASE = 1 ether;
 // }
 
-/// @dev Base contract of Fort
+/// @dev This contract include frequently used data
 contract FortFrequentlyUsed is FortBase {
 
     // Address of DCU contract

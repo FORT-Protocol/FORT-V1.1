@@ -2,13 +2,12 @@
 
 pragma solidity ^0.8.6;
 
-import "../interfaces/INestPriceFacade.sol";
 import "../interfaces/INestBatchPrice2.sol";
 import "../custom/FortFrequentlyUsed.sol";
 
 import "hardhat/console.sol";
 
-contract NestPriceFacade is FortFrequentlyUsed, INestPriceFacade, INestBatchPrice2 {
+contract NestPriceFacade is FortFrequentlyUsed, INestBatchPrice2 {
     
     struct Price {
         uint price;
@@ -52,7 +51,7 @@ contract NestPriceFacade is FortFrequentlyUsed, INestPriceFacade, INestBatchPric
         address tokenAddress, 
         uint height, 
         address payback
-    ) external payable override returns (uint blockNumber, uint price) {
+    ) external payable returns (uint blockNumber, uint price) {
 
         if (msg.value > 0.01 ether) {
             payable(payback).transfer(msg.value - 0.01 ether);
@@ -76,7 +75,7 @@ contract NestPriceFacade is FortFrequentlyUsed, INestPriceFacade, INestBatchPric
     function triggeredPrice(
         address tokenAddress, 
         address payback
-    ) public payable override returns (uint blockNumber, uint price) {
+    ) public payable returns (uint blockNumber, uint price) {
 
         if (msg.value > 0.01 ether) {
             payable(payback).transfer(msg.value - 0.01 ether);
@@ -99,7 +98,7 @@ contract NestPriceFacade is FortFrequentlyUsed, INestPriceFacade, INestBatchPric
     function latestPrice(
         address tokenAddress, 
         address payback
-    ) public payable override returns (uint blockNumber, uint price) {
+    ) public payable returns (uint blockNumber, uint price) {
 
         if (msg.value > 0.01 ether) {
             payable(payback).transfer(msg.value - 0.01 ether);
@@ -126,7 +125,7 @@ contract NestPriceFacade is FortFrequentlyUsed, INestPriceFacade, INestBatchPric
     function triggeredPriceInfo(
         address tokenAddress, 
         address payback
-    ) public payable override returns (uint blockNumber, uint price, uint avgPrice, uint sigmaSQ) {
+    ) public payable returns (uint blockNumber, uint price, uint avgPrice, uint sigmaSQ) {
 
         if (msg.value > 0.01 ether) {
             payable(payback).transfer(msg.value - 0.01 ether);
@@ -159,7 +158,6 @@ contract NestPriceFacade is FortFrequentlyUsed, INestPriceFacade, INestBatchPric
     ) 
     public 
     payable 
-    override
     returns (
         uint[] memory prices,
         uint triggeredPriceBlockNumber,
@@ -186,7 +184,7 @@ contract NestPriceFacade is FortFrequentlyUsed, INestPriceFacade, INestBatchPric
         address tokenAddress, 
         uint count, 
         address paybackAddress
-    ) public payable override returns (uint[] memory prices) {
+    ) public payable returns (uint[] memory prices) {
         if (msg.value > 0.01 ether) {
             payable(paybackAddress).transfer(msg.value - 0.01 ether);
         } else {
