@@ -6,7 +6,7 @@ describe('27.FortPRC44-test', function() {
     it('First', async function() {
         var [owner, addr1, addr2] = await ethers.getSigners();
         
-        const { eth, usdt, hbtc, dcu, fortOptions, fortFutures, fortPRC44, BLOCK_TIME, USDT_DECIMALS } = await deploy();
+        const { eth, usdt, hbtc, dcu, cofixRouter, fortPRCSwap, fortPRC44, BLOCK_TIME, USDT_DECIMALS } = await deploy();
         const TestERC20 = await ethers.getContractFactory('TestERC20');
         await dcu.setMinter(owner.address, 1);
         await dcu.mint(owner.address, '10000000000000000000000000');
@@ -28,16 +28,30 @@ describe('27.FortPRC44-test', function() {
             return {
                 height: await ethers.provider.getBlockNumber(),
                 owner: await getAccountInfo(owner),
-                addr1: await getAccountInfo(addr1),
+                fortPRCSwap: await getAccountInfo(fortPRCSwap),
             };
         }
 
         await fortPRC44.setMinter(owner.address, 1);
-        await fortPRC44.mint(owner.address, toBigInt(10000));
+        await fortPRC44.mint(fortPRCSwap.address, toBigInt(5000000));
         console.log(await getStatus());
 
         if (true) {
-            console.log('1. roll44');
+            console.log('1. buy prc');
+            await dcu.approve(cofixRouter.address, toBigInt(1000000));
+            await cofixRouter.swapExactTokensForTokens(
+                [dcu.address, fortPRC44.address],
+                toBigInt(10000),
+                0,
+                owner.address,
+                owner.address,
+                9999999999n
+            );
+            console.log(await getStatus());
+        }
+
+        if (true) {
+            console.log('2. roll44');
             
             for (var i = 0; i < 1; ++i) {
                 await fortPRC44.roll44(1, 20000);

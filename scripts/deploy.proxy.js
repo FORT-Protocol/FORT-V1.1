@@ -18,6 +18,7 @@ exports.deploy = async function() {
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
     const FortPRC44 = await ethers.getContractFactory('FortPRC44');
     const FortPRCSwap = await ethers.getContractFactory('FortPRCSwap');
+    const CoFiXRouter = await ethers.getContractFactory('CoFiXRouter');
 
     console.log('** Deploy: deploy.proxy.js **');
     
@@ -60,6 +61,15 @@ exports.deploy = async function() {
     const fortPRC44 = await upgrades.deployProxy(FortPRC44, [fortGovernance.address], { initializer: 'initialize' });
     //const fortPRC44 = await FortPRC44.attach('0x0000000000000000000000000000000000000000');
     console.log('fortPRC44: ' + fortPRC44.address);
+    
+    const fortPRCSwap = await upgrades.deployProxy(FortPRCSwap, [fortGovernance.address], { initializer: 'initialize' });
+    //const fortPRCSwap = await FortPRCSwap.attach('0x0000000000000000000000000000000000000000');
+    console.log('fortPRCSwap: ' + fortPRCSwap.address);
+
+    const cofixRouter = await upgrades.deployProxy(CoFiXRouter, [fortGovernance.address], { initializer: 'initialize' });
+    //const cofixRouter = await CoFiXRouter.attach('0x0000000000000000000000000000000000000000');
+    console.log('cofixRouter: ' + cofixRouter.address);
+    
 
     // await fortGovernance.initialize('0x0000000000000000000000000000000000000000');
     console.log('1. dcu.initialize(fortGovernance.address)');
@@ -87,6 +97,8 @@ exports.deploy = async function() {
     await fortVaultForStaking.update(fortGovernance.address);
     console.log('8. fortPRC44.update()');
     await fortPRC44.update(fortGovernance.address);
+    console.log('9. fortPRCSwap.update()');
+    await fortPRCSwap.update(fortGovernance.address);
 
     // 2.4. Register ETH ans HBTC
     console.log('7. fortOptions.register(eth.address)');
@@ -151,6 +163,9 @@ exports.deploy = async function() {
     await fortFutures.create(hbtc.address, [1, 2, 3, 4, 5], true);
     console.log('14. create hbtc short lever');
     await fortFutures.create(hbtc.address, [1, 2, 3, 4, 5], false);
+
+    await cofixRouter.registerPair(fortPRC44.address, dcu.address, fortPRCSwap.address);
+    await fortPRCSwap.setAddress(cofixRouter.address, fortPRC44.address);
     console.log('---------- OK ----------');
     
     const BLOCK_TIME = 14;
@@ -169,7 +184,9 @@ exports.deploy = async function() {
         fortFutures: fortFutures,
         fortVaultForStaking: fortVaultForStaking,
         fortPRC44: fortPRC44,
+        fortPRCSwap: fortPRCSwap,
         nestPriceFacade: nestPriceFacade,
+        cofixRouter: cofixRouter,
 
         BLOCK_TIME: BLOCK_TIME,
         USDT_DECIMALS: 18,
