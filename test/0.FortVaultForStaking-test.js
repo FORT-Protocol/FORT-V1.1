@@ -198,7 +198,7 @@ describe('0.FortVaultForStaking-test', function() {
         if (true) {
             console.log('6. Seconds round');
             
-            await fortVaultForStaking.setConfig(toBigInt(0.1), 70, 80);
+            await fortVaultForStaking.setConfig(toBigInt(0.1), 70, 90);
             config = await fortVaultForStaking.getConfig();
             console.log(config.toString());
 
