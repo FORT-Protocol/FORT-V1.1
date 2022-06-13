@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.6;
 
-import "./FortPRCToken.sol";
+import "./FortPRC.sol";
 
 import "./DCU.sol";
 
 /// @dev Guarantee
-contract FortPRC44 is FortPRCToken {
+contract FortPRC44 is FortPRC {
 
     // Roll dice44 structure
     struct Dice44 {

@@ -58,7 +58,7 @@ module.exports = {
       timeout: 2000000000
     },
     bsc_test: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      url: "https://bsc.getblock.io/testnet/?api_key=57d2baf4-a7a4-4d1b-af95-5c35653e05ea",
       chainId: 97,
       gasPrice: 10e9,
       gas: 6000000,
