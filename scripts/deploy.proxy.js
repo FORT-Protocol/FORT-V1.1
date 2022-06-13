@@ -16,6 +16,8 @@ exports.deploy = async function() {
     const FortOptions = await ethers.getContractFactory('FortOptions');
     const FortFutures = await ethers.getContractFactory('FortFutures');
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
+    const FortPRC44 = await ethers.getContractFactory('FortPRC44');
+    const FortPRCSwap = await ethers.getContractFactory('FortPRCSwap');
 
     console.log('** Deploy: deploy.proxy.js **');
     
@@ -55,6 +57,10 @@ exports.deploy = async function() {
     //const fortVaultForStaking = await FortVaultForStaking.attach('0x0000000000000000000000000000000000000000');
     console.log('fortVaultForStaking: ' + fortVaultForStaking.address);
 
+    const fortPRC44 = await upgrades.deployProxy(FortPRC44, [fortGovernance.address], { initializer: 'initialize' });
+    //const fortPRC44 = await FortPRC44.attach('0x0000000000000000000000000000000000000000');
+    console.log('fortPRC44: ' + fortPRC44.address);
+
     // await fortGovernance.initialize('0x0000000000000000000000000000000000000000');
     console.log('1. dcu.initialize(fortGovernance.address)');
     await dcu.initialize(fortGovernance.address);
@@ -79,6 +85,8 @@ exports.deploy = async function() {
     await fortFutures.update(fortGovernance.address);
     console.log('7. fortVaultForStaking.update()');
     await fortVaultForStaking.update(fortGovernance.address);
+    console.log('8. fortPRC44.update()');
+    await fortPRC44.update(fortGovernance.address);
 
     // 2.4. Register ETH ans HBTC
     console.log('7. fortOptions.register(eth.address)');
@@ -127,6 +135,8 @@ exports.deploy = async function() {
     await dcu.setMinter(fortFutures.address, 1);
     console.log('11. dcu.setMinter(fortVaultForStaking.address, 1)');
     await dcu.setMinter(fortVaultForStaking.address, 1);
+    console.log('11. dcu.setMinter(fortPRC44.address, 1)');
+    await dcu.setMinter(fortPRC44.address, 1);
 
     console.log('8.2 create lever');
     
@@ -158,6 +168,7 @@ exports.deploy = async function() {
         fortOptions: fortOptions,
         fortFutures: fortFutures,
         fortVaultForStaking: fortVaultForStaking,
+        fortPRC44: fortPRC44,
         nestPriceFacade: nestPriceFacade,
 
         BLOCK_TIME: BLOCK_TIME,
