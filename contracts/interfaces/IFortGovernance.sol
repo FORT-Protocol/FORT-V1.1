@@ -7,6 +7,12 @@ import "./IFortMapping.sol";
 /// @dev This interface defines the governance methods
 interface IFortGovernance is IFortMapping {
 
+    /// @dev Governance flag changed event
+    /// @param addr Target address
+    /// @param oldFlag Old governance flag
+    /// @param newFlag New governance flag
+    event FlagChanged(address addr, uint oldFlag, uint newFlag);
+
     /// @dev Set governance authority
     /// @param addr Destination address
     /// @param flag Weight. 0 means to delete the governance permission of the target address. Weight is not 

@@ -5,6 +5,12 @@ pragma solidity ^0.8.6;
 /// @dev The interface defines methods for Fort builtin contract address mapping
 interface IFortMapping {
 
+    /// @dev Address updated event
+    /// @param name Address name
+    /// @param oldAddress Old address
+    /// @param newAddress New address
+    event AddressUpdated(string name, address oldAddress, address newAddress);
+
     /// @dev Set the built-in contract address of the system
     /// @param dcuToken Address of dcu token contract
     /// @param fortDAO IFortDAO implementation contract address

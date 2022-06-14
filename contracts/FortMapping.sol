@@ -47,21 +47,27 @@ abstract contract FortMapping is FortBase, IFortMapping {
     ) external override onlyGovernance {
 
         if (dcuToken != address(0)) {
+            emit AddressUpdated("dcuToken", _dcuToken, dcuToken);
             _dcuToken = dcuToken;
         }
         if (fortDAO != address(0)) {
+            emit AddressUpdated("fortDAO", _hedgeDAO, fortDAO);
             _hedgeDAO = fortDAO;
         }
         if (fortOptions != address(0)) {
+            emit AddressUpdated("fortOptions", _hedgeOptions, fortOptions);
             _hedgeOptions = fortOptions;
         }
         if (fortFutures != address(0)) {
+            emit AddressUpdated("fortFutures", _hedgeFutures, fortFutures);
             _hedgeFutures = fortFutures;
         }
         if (fortVaultForStaking != address(0)) {
+            emit AddressUpdated("fortVaultForStaking", _hedgeVaultForStaking, fortVaultForStaking);
             _hedgeVaultForStaking = fortVaultForStaking;
         }
         if (nestPriceFacade != address(0)) {
+            emit AddressUpdated("nestPriceFacade", _nestPriceFacade, nestPriceFacade);
             _nestPriceFacade = nestPriceFacade;
         }
     }
@@ -119,6 +125,7 @@ abstract contract FortMapping is FortBase, IFortMapping {
     /// @param key The key
     /// @param addr Destination address. 0 means to delete the registration information
     function registerAddress(string calldata key, address addr) external override onlyGovernance {
+        emit AddressUpdated(key, _registeredAddress[key], addr);
         _registeredAddress[key] = addr;
     }
 

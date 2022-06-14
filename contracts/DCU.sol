@@ -9,6 +9,12 @@ import "./FortBase.sol";
 /// @dev DCU token
 contract DCU is FortBase, ERC20("Decentralized Currency Unit", "DCU") {
 
+    /// @dev Mining permission flag change event
+    /// @param account Target address
+    /// @param oldFlag Old flag
+    /// @param newFlag New flag
+    event MinterChanged(address account, uint oldFlag, uint newFlag);
+
     // Flags for account
     mapping(address=>uint) _minters;
 
@@ -24,6 +30,7 @@ contract DCU is FortBase, ERC20("Decentralized Currency Unit", "DCU") {
     /// @param account Target address
     /// @param flag Mining permission flag
     function setMinter(address account, uint flag) external onlyGovernance {
+        emit MinterChanged(account, _minters[account], flag);
         _minters[account] = flag;
     }
 
