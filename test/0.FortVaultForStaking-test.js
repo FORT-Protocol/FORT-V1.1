@@ -67,7 +67,7 @@ describe('0.FortVaultForStaking-test', function() {
             config = await fortVaultForStaking.getConfig();
             console.log(config.toString());
 
-            await fortVaultForStaking.setConfig(toBigInt(0.1), 10, 60);
+            await fortVaultForStaking.setConfig(toBigInt(0.1), 10, 70);
             config = await fortVaultForStaking.getConfig();
             console.log(config.toString());
         }
@@ -198,7 +198,7 @@ describe('0.FortVaultForStaking-test', function() {
         if (true) {
             console.log('6. Seconds round');
             
-            await fortVaultForStaking.setConfig(toBigInt(0.1), 70, 90);
+            await fortVaultForStaking.setConfig(toBigInt(0.1), 70, 100);
             config = await fortVaultForStaking.getConfig();
             console.log(config.toString());
 
@@ -227,7 +227,7 @@ describe('0.FortVaultForStaking-test', function() {
             }
     
             if (true) {
-                console.log('3. stake');
+                console.log('7. stake');
     
                 //await usdt.transfer(addr1.address, toBigInt(10000000, 6));
                 //await usdt.transfer(owner.address, toBigInt(10000000, 6));
@@ -242,7 +242,7 @@ describe('0.FortVaultForStaking-test', function() {
             }
             
             if (true) {
-                console.log('4. getReward');
+                console.log('8. getReward');
                 for (var i = 0; i < 7; ++i) {
                     await usdt.transfer(owner.address, toBigInt(0, 6));
                 }

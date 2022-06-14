@@ -16,6 +16,8 @@ exports.deploy = async function() {
     const FortOptions = await ethers.getContractFactory('FortOptions');
     const FortFutures = await ethers.getContractFactory('FortFutures');
     const FortVaultForStaking = await ethers.getContractFactory('FortVaultForStaking');
+    const FortSwap = await ethers.getContractFactory('FortSwap');
+    const FortLPGuarantee = await ethers.getContractFactory('FortLPGuarantee');
     const FortPRC44 = await ethers.getContractFactory('FortPRC44');
     const FortPRCSwap = await ethers.getContractFactory('FortPRCSwap');
     const CoFiXRouter = await ethers.getContractFactory('CoFiXRouter');
@@ -58,6 +60,14 @@ exports.deploy = async function() {
     //const fortVaultForStaking = await FortVaultForStaking.attach('0x0000000000000000000000000000000000000000');
     console.log('fortVaultForStaking: ' + fortVaultForStaking.address);
 
+    const fortSwap = await upgrades.deployProxy(FortSwap, [fortGovernance.address], { initializer: 'initialize' });
+    //const fortSwap = await FortSwap.attach('0x0000000000000000000000000000000000000000');
+    console.log('fortSwap: ' + fortSwap.address);
+
+    const fortLPGuarantee = await upgrades.deployProxy(FortLPGuarantee, [fortGovernance.address], { initializer: 'initialize' });
+    //const fortLPGuarantee = await FortLPGuarantee.attach('0x0000000000000000000000000000000000000000');
+    console.log('fortLPGuarantee: ' + fortLPGuarantee.address);
+
     const fortPRC44 = await upgrades.deployProxy(FortPRC44, [fortGovernance.address], { initializer: 'initialize' });
     //const fortPRC44 = await FortPRC44.attach('0x0000000000000000000000000000000000000000');
     console.log('fortPRC44: ' + fortPRC44.address);
@@ -69,7 +79,6 @@ exports.deploy = async function() {
     const cofixRouter = await upgrades.deployProxy(CoFiXRouter, [fortGovernance.address], { initializer: 'initialize' });
     //const cofixRouter = await CoFiXRouter.attach('0x0000000000000000000000000000000000000000');
     console.log('cofixRouter: ' + cofixRouter.address);
-    
 
     // await fortGovernance.initialize('0x0000000000000000000000000000000000000000');
     console.log('1. dcu.initialize(fortGovernance.address)');
@@ -95,6 +104,10 @@ exports.deploy = async function() {
     await fortFutures.update(fortGovernance.address);
     console.log('7. fortVaultForStaking.update()');
     await fortVaultForStaking.update(fortGovernance.address);
+    console.log('7.1. fortSwap.update()');
+    await fortSwap.update(fortGovernance.address);
+    console.log('7.2. fortLPGuarantee.update()');
+    await fortLPGuarantee.update(fortGovernance.address);
     console.log('8. fortPRC44.update()');
     await fortPRC44.update(fortGovernance.address);
     console.log('9. fortPRCSwap.update()');
@@ -141,14 +154,25 @@ exports.deploy = async function() {
         miuShort: 0n
     });
 
+    await fortLPGuarantee.register(eth.address, {
+        channelId: 0,
+        pairIndex: 1,
+        
+        sigmaSQ: 45659142400n,
+        miuLong: 64051194700n,
+        miuShort: 0n
+    });
+
     console.log('9. dcu.setMinter(fortOptions.address, 1)');
     await dcu.setMinter(fortOptions.address, 1);
     console.log('10. dcu.setMinter(fortFutures.address, 1)');
     await dcu.setMinter(fortFutures.address, 1);
     console.log('11. dcu.setMinter(fortVaultForStaking.address, 1)');
     await dcu.setMinter(fortVaultForStaking.address, 1);
-    console.log('11. dcu.setMinter(fortPRC44.address, 1)');
+    console.log('12. dcu.setMinter(fortPRC44.address, 1)');
     await dcu.setMinter(fortPRC44.address, 1);
+    console.log('13. dcu.setMinter(fortLPGuarantee.address, 1)');
+    await dcu.setMinter(fortLPGuarantee.address, 1);
 
     console.log('8.2 create lever');
     
@@ -183,6 +207,8 @@ exports.deploy = async function() {
         fortOptions: fortOptions,
         fortFutures: fortFutures,
         fortVaultForStaking: fortVaultForStaking,
+        fortSwap: fortSwap,
+        fortLPGuarantee: fortLPGuarantee,
         fortPRC44: fortPRC44,
         fortPRCSwap: fortPRCSwap,
         nestPriceFacade: nestPriceFacade,

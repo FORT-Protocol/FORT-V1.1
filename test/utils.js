@@ -19,7 +19,9 @@ exports.showReceipt = async function(receipt) {
 };
 
 exports.toDecimal = function(bi, decimals) {
-    decimals = decimals || 18;
+    if (decimals == undefined) {
+        decimals = 18;
+    }
     decimals = BigInt(decimals.toString());
     bi = BigInt(bi.toString());
     let BASE = BigInt(10);
@@ -137,14 +139,66 @@ exports.Vc = function(S0, K, sigma, miu, T) {
     S0 = parseFloat(S0);
     K = parseFloat(K);
     let d1v = exports.d1(S0, K, sigma, miu, T);
-    return S0 * (1 + miu * T) * (1 - snd(d1v / Math.sqrt(T) - sigma * Math.sqrt(T)))
+    let vc = S0 * (1 + miu * T) * (1 - snd(d1v / Math.sqrt(T) - sigma * Math.sqrt(T)))
     - K * (1 - snd(d1v / Math.sqrt(T)));
+    // Vc>=S0*1%; Vp>=K*1%
+    if (vc < S0 / 100) {
+        vc = S0 / 100;
+    }
+    return vc;
 };
 
 exports.Vp = function(S0, K, sigma, miu, T) {
     S0 = parseFloat(S0);
     K = parseFloat(K);
     let d1v = exports.d1(S0, K, sigma, miu, T);
-    return K * snd(d1v / Math.sqrt(T))
+    vp = K * snd(d1v / Math.sqrt(T))
     - S0 * (1 + miu * T) * snd(d1v / Math.sqrt(T) - sigma * Math.sqrt(T));
+    // Vc>=S0*1%; Vp>=K*1%
+    if (vp < K / 100) {
+        vp = K / 100;
+    }
+    return vp;
 }
+
+exports.UI = function(obj) {
+    if (obj) {
+        var res = {};
+
+        var index = 0;
+        var empty = true;
+        for (var i in obj) {
+            if (i == index++) continue;
+            empty = false;
+            if (obj[i] && typeof obj[i] == 'object') {
+                if (obj[i]._isBigNumber) {
+                    res[i] = obj[i].toString();
+                } else {
+                    res[i] = exports.UI(obj[i]);
+                }
+            } else {
+                res[i] = obj[i];
+            }
+        }
+
+        if (empty) {
+            var arr = [];
+            for (var i in obj) {
+                empty = false;
+                if (obj[i] && typeof obj[i] == 'object') {
+                    if (obj[i]._isBigNumber) {
+                        arr.push(obj[i].toString());
+                    } else {
+                        arr.push(exports.UI(obj[i]));
+                    }
+                } else {
+                    arr.push(obj[i]);
+                }
+            }
+            return arr;
+        }
+        return res;
+    }
+
+    return obj;
+};
