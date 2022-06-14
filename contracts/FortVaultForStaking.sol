@@ -93,10 +93,10 @@ contract FortVaultForStaking is FortFrequentlyUsed, IFortVaultForStaking {
         _stopBlock = stopBlock;
     }
 
-    /// @dev Modify configuration
-    /// @param dcuUnit dcu reward unit
-    /// @param startBlock staking start block number
-    /// @param stopBlock staking stop block number
+    /// @dev Get configuration
+    /// @return dcuUnit dcu reward unit
+    /// @return startBlock staking start block number
+    /// @return stopBlock staking stop block number
     function getConfig() external view returns (uint dcuUnit, uint startBlock, uint stopBlock) {
         return (uint(_dcuUnit), uint(_startBlock), uint(_stopBlock));
     }
